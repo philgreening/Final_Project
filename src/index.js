@@ -1,12 +1,20 @@
 const express = require('express');
+const cors = require('cors');
+
 const db = require('./config');
+
 const app = express()
+const port = 4000;
 
 const bodyParser = require("body-parser");
+const middleware = require('./middleware/middleware');
 
+app.use(cors());
 app.use(express.json());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+
+// app.use(middleware.decodeToken);
 
 ///////////////Item Routes///////////////
 
@@ -323,4 +331,4 @@ app.patch("/update-transaction/:id", async(req,res)=>{
 });
 
 
-app.listen(4000, ()=>console.log("Up & running *4000"));
+app.listen(port, ()=>console.log("Up & running on port " + port));

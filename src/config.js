@@ -1,11 +1,5 @@
-const firebase = require('firebase-admin');
+const admin = require('firebase-admin');
 const credentials = require("./key.json");
-//const { initializeApp, applicationDefault, cert } = require('firebase-admin/app');
-//const { getFirestore, Timestamp, FieldValue } = require('firebase-admin/firestore');
-
-
-// import { getFirestore } from "firebase/firestore";
-
 
  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
@@ -16,19 +10,18 @@ const firebaseConfig = {
     messagingSenderId: "7143544341",
     appId: "1:7143544341:web:59d9d4eb128c77e3a0a01c",
     measurementId: "G-SSXQSXDBT6",
-    credential: firebase.credential.cert(credentials)
+    credential: admin.credential.cert(credentials)
   };
-firebase.initializeApp(firebaseConfig);
-//const app = initializeApp(firebaseConfig);
-const db = firebase.firestore();
+
+admin.initializeApp(firebaseConfig);
+const db = admin.firestore();
 db.settings({ ignoreUndefinedProperties: true })
 
-  //const db = getFirestore(app);
 const Items= db.collection("Items");
 const Reservations = db.collection("Reservations");
 const Transactions = db.collection("Transactions");
 const Users = db.collection("Users");
-const CurrentTime = firebase.firestore.FieldValue.serverTimestamp();
-const FutureTime = firebase.firestore.Timestamp.fromMillis(Date.now() + 604800000);
+const CurrentTime = admin.firestore.FieldValue.serverTimestamp();
+const FutureTime = admin.firestore.Timestamp.fromMillis(Date.now() + 604800000);
 
-module.exports = { Items, Reservations, Transactions, Users, CurrentTime, FutureTime };
+module.exports = { Items, Reservations, Transactions, Users, CurrentTime, FutureTime, admin };
