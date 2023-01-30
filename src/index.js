@@ -7,7 +7,7 @@ const app = express()
 const port = 4000;
 
 const bodyParser = require("body-parser");
-const middleware = require('./middleware/middleware');
+const authenticate = require('./middleware/middlewareAuth');
 
 app.use(cors());
 app.use(express.json());
@@ -35,7 +35,7 @@ app.post("/create-item", async(req,res)=>{
 }
 });
 
-app.get("/item/all", async(req,res)=>{
+app.get("/item/all", authenticate, async(req,res)=>{
     try {
         const response = await db.Items.get();
         let itemArray = [];
