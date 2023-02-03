@@ -107,11 +107,12 @@ app.post("/create-user", async(req,res)=>{
     const data = {
         first_name: req.body.first_name,
         last_name: req.body.last_name,
-        email: req.body.email,
-        address: req.body.address
+        address: req.body.address,
+        admin: false,
     };
+    const uid = req.body.id;
     console.log("User data: ", data);
-    await db.Users.add(data);
+    await db.Users.doc(uid).set(data);
     res.send({msg:"User Added"});
 }catch(error){
     console.log("" + error)
