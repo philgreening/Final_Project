@@ -205,7 +205,7 @@ app.post("/create-reservation", async(req,res)=>{
 }
 });
 
-app.get("/Reservation/all", async(req,res)=>{
+app.get("/Reservation/all", authenticate, async(req,res)=>{
     try {
         const response = await db.Reservations.get();
         let resArray = [];
@@ -275,7 +275,7 @@ app.post("/create-transaction", async(req,res)=>{
 }
 });
 
-app.get("/Transaction/all", async(req,res)=>{
+app.get("/Transaction/all", authenticate, async(req,res)=>{
     try {
         const response = await db.Transactions.get();
         let transactionArray = [];
