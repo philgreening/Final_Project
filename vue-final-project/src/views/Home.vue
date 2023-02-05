@@ -23,35 +23,35 @@ export default {
       items: []
     }
   },
-  mounted() {
-    const auth = getAuth();
+//   mounted() {
+//     const auth = getAuth();
 
-     onAuthStateChanged(auth,(user) => {
-  if (user) {
-    // User is signed in.
-     user.getIdToken().then((idToken) => {
-      console.log(idToken)
-      // Include the token as an Authorization header in your GET request:
-      axios.get('http://localhost:4000/item/all', {
-        headers: {
-          Authorization: `Bearer ${idToken}`
-        }
-      })
-      .then(response => {
-        console.log(response.data)
-        this.items = response.data;
-      })
-      .catch(error => {
-        console.error(error)
-      })
-    })
-  } else {
-    // No user is signed in.
-    console.log("no user signed in")
-  }
-})
+//      onAuthStateChanged(auth,(user) => {
+//   if (user) {
+//     // User is signed in.
+//      user.getIdToken().then((idToken) => {
+//       console.log(idToken)
+//       // Include the token as an Authorization header in your GET request:
+//       axios.get('http://localhost:4000/item/all', {
+//         headers: {
+//           Authorization: `Bearer ${idToken}`
+//         }
+//       })
+//       .then(response => {
+//         console.log(response.data)
+//         this.items = response.data;
+//       })
+//       .catch(error => {
+//         console.error(error)
+//       })
+//     })
+//   } else {
+//     // No user is signed in.
+//     console.log("no user signed in")
+//   }
+// })
 
-  }
+//   }
 
 }
 

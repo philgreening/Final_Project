@@ -8,6 +8,29 @@
 <script setup>
   import { RouterLink, RouterView } from 'vue-router'
   import Header from './components/Header.vue'
+  import { getAuth, onAuthStateChanged } from '@firebase/auth';
+  import { useUserStore } from './stores/userStore';
+
+  const auth = getAuth()
+  const userStore = useUserStore();
+
+  onAuthStateChanged(auth,(user) => {
+  if (user) {
+    // User is signed in.
+     user.getIdToken().then((idToken) => {
+      userStore.authToken = idToken;
+      userStore.user.id = user.uid;
+    })
+  } else {
+    // No user is signed in.
+    console.log("no user signed in")
+  }
+})
+
+
+
+
+
 </script>
 
 <style scoped>

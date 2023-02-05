@@ -1,5 +1,5 @@
 import "bootstrap/dist/css/bootstrap.css"
-import { createApp } from 'vue'
+import { createApp, watch } from 'vue'
 import { createPinia } from 'pinia'
 import axios from 'axios'
 import VueAxios from 'vue-axios'
@@ -33,13 +33,21 @@ const app = initializeApp(firebaseConfig);
 // Initialize Firebase Authentication and get a reference to the service
 const auth = getAuth(app);
 
+const pinia = createPinia();
 
-createApp(App).use(createPinia()).use(router).use(VueAxios, axios).mount('#app')
+// Sets a persistant store session
+if(localStorage.getItem("state")) {
+    pinia.state.value = JSON.parse(localStorage.getItem("state"));
+};
 
-// app.use(createPinia())
-// app.use(router)
-// app.use(VueAxios, axios)
+watch(
+    pinia.state,
+    (state) => {
+        localStorage.setItem("state", JSON.stringify(state));
+    },
+    { deep: true}
+);
 
-// app.mount('#app')
+createApp(App).use(pinia).use(router).use(VueAxios, axios).mount('#app')
 
 

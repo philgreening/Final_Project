@@ -19,10 +19,10 @@
           <template v-if="isLoggedIn">
   
             <ul class="navbar-nav mr-auto">
-              <!-- <li class="nav-item mx-2"> -->
-                <!-- <router-link to="/feed" class="nav-link"><strong>My Feed</strong></router-link>
-              </li>
               <li class="nav-item mx-2">
+                <router-link to="/admin" class="nav-link"><strong>Admin</strong></router-link>
+              </li>
+              <!-- <li class="nav-item mx-2">
                 <router-link to="/my-profile" class="nav-link"><strong>My Account</strong></router-link>
               </li>
               <li class="nav-item mx-2">
@@ -82,19 +82,6 @@ onMounted(() =>{
         })
     });
 
-  onAuthStateChanged(auth,(user) => {
-  if (user) {
-    // User is signed in.
-     user.getIdToken().then((idToken) => {
-      userStore.authToken = idToken;
-      userStore.user.id = user.uid;
-    })
-  } else {
-    // No user is signed in.
-    console.log("no user signed in")
-  }
-})
-
 const handleSignOut = () => {
     signOut(auth).then(()=> {
       userStore.$reset();
@@ -102,55 +89,5 @@ const handleSignOut = () => {
     });
 };
 
-//  auth.onAuthStateChanged((user) => {
-//   if (user) {
-//     // User is signed in.
-//     user.getIdToken().then((idToken) => {
-//         console.log(idToken)
-//       // Include the token as an Authorization header in your GET request:
-//       axios.get('http://localhost:4000/item/all', {
-//         headers: {
-//           Authorization: `Bearer ${idToken}`
-//         }
-//       })
-//       .then(response => {
-//         console.log(response.data)
-//       })
-//       .catch(error => {
-//         console.error(error)
-//       })
-//     })
-//   } else {
-//     // No user is signed in.
-//     console.log("no user signed in")
-//   }
-// })
-
-
-
-// export default {
-//   name: 'Header',
-//   methods: {
-//     async logout() {
-//       // call logout api end point and send token
-//       await axios
-//         .post('api/v1/token/logout/')
-//         .then(response => {
-//           console.log('logged out')
-//         })
-//         .catch(error => {
-//           console.log(JSON.stringify(error))
-//         })
-//       // remove authentication token and data
-//       axios.defaults.headers.common["Authorization"] = "";
-//       localStorage.removeItem("token");
-//       localStorage.removeItem('username');
-//       localStorage.removeItem('userid');
-//       this.$store.commit('removeToken');
-//       this.$store.state.user.username = '';
-//       this.$router.push('/');
-//     },
-//   },
-// }
 </script>
   
