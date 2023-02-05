@@ -25,7 +25,7 @@ const login = () => {
     // Signed in 
     const user = userCredential.user;
     console.log("user:",user);
-    router.push("/");
+    router.push("/items");
     // ...
   })
   .catch((error) => {

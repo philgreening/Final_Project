@@ -1,22 +1,13 @@
 <template>
-  <!-- <div class="container-fluid">
-    Home
-    <button @click="handleSignOut" v-if="isLoggedIn">Sign out</button>
-  </div> -->
   <div class="container-fluid" v-for="item in items" v-bind:key="item">
     <div class="card m-5" style="width: 18rem;">
   <img src="..." class="card-img-top" alt="...">
   <div class="card-body">
     <h5 class="card-title">{{ item.item_name }}</h5>
     <p class="card-text">{{ item.description }}</p>
-    <p class="card-text">{{ item.status }}</p>
-    <template v-if="item.status == 'Availiable'">
-      <a href="#" class="btn btn-primary">Reserve</a>
-    </template>
   </div>
 </div>
   </div>
-
 </template>
 
 <script>
@@ -35,7 +26,7 @@ export default {
   mounted() {
     const auth = getAuth();
 
-     auth.onAuthStateChanged((user) => {
+     onAuthStateChanged(auth,(user) => {
   if (user) {
     // User is signed in.
      user.getIdToken().then((idToken) => {
