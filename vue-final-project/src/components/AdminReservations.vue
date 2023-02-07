@@ -1,27 +1,21 @@
 <template>
     <div class="container p-4">
-        <h1 class="text-center"> Transactions</h1>
+        <h1 class="text-center"> Reservations</h1>
         <table class="table p-4">
             <thead>
                 <tr>
                     <th scope="col">Item Name</th>
                     <th scope="col">User Name</th>
-                    <th scope="col">Transaction status</th>
-                    <th scope="col">Loan date</th>
-                    <th scope="col">Due date</th>
-                    <th scope="col">Date returned</th>
+                    <th scope="col">Reservation Date</th>
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="transaction in transactions" :key="transaction.transaction_id">
-                    <td>{{ transaction.item_name }}</td>
+                <tr v-for="reservation in reservations" :key="reservation.res_id">
+                    <td>{{ reservation.item_name }}</td>
                     <template v-for="user in users" :key="user.user_id">
-                    <td v-if="user.user_id === transaction.user_id">{{ user.first_name + ` ` + user.last_name }}</td>
+                        <td v-if="user.user_id === reservation.user_id">{{ user.first_name + ` ` + user.last_name }}</td>
                     </template>
-                    <td>{{ transaction.transaction_status }}</td>
-                    <td>{{ formatDate(transaction.loan_date) }}</td>
-                    <td>{{ formatDate(transaction.due_date) }}</td>
-                    <td>{{ formatDate(transaction.returned_date) }}</td>
+                    <td>{{ formatDate(reservation.res_date) }}</td>
                 </tr>
 
             </tbody>
@@ -41,24 +35,24 @@ const userStore = useUserStore();
 export default {
     data() {
         return {
-            transactions: [],
+            reservations: [],
             users: []
         }
     },
     mounted() {
-        this.getAllTransactions();
+        this.getAllReservations();
         this.getAllUsers();
     },
     methods: {
-        async getAllTransactions() {
-            await axios.get('http://localhost:4000/Transaction/all', {
+        async getAllReservations() {
+            await axios.get('http://localhost:4000/Reservation/all', {
                 headers: {
                     Authorization: `Bearer ${userStore.authToken}`
                 }
             })
                 .then(response => {
                     console.log("res response: ", response.data)
-                    this.transactions = response.data;
+                    this.reservations = response.data;
                 })
                 .catch(error => {
                     console.log(error);
