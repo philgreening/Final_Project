@@ -112,7 +112,7 @@ export default {
             this.reservedItem = reservation;
             console.log(this.reservedItem);
         },
-        async returnItem() {
+        async loanItem() {
             console.log("returned: " + this.returnedItem.item_id);
 
             const data = {
@@ -121,7 +121,9 @@ export default {
                 // item_name: this.returned.item_name,
                 // user_id: userStore.user.id
             };
-
+            //TODO create transaction
+            // update item
+            // delete reservation
             await axios.patch('http://localhost:4000/update-transaction/' + this.returnedItem.transaction_id, data, {
                 headers: {
                     Authorization: `Bearer ${userStore.authToken}`
