@@ -12,7 +12,7 @@
             </thead>
             <tbody>
                 <tr v-for="reservation in reservations" :key="reservation.res_id">
-                    <td>{{ reservation.item_name }}</td>
+                    <td >{{ reservation.item_name }}</td>
                     <template v-for="user in users" :key="user.user_id">
                         <td v-if="user.user_id === reservation.user_id">{{ user.first_name + ` ` + user.last_name }}</td>
                     </template>
@@ -55,6 +55,7 @@
 import { onMounted, reactive, ref } from 'vue';
 import { useUserStore } from '../stores/userStore';
 import axios from 'axios';
+import AdminTransactions from './AdminTransactions.vue';
 
 const userStore = useUserStore();
 
@@ -113,25 +114,73 @@ export default {
             console.log(this.reservedItem);
         },
         async loanItem() {
-            console.log("returned: " + this.returnedItem.item_id);
+            console.log("Loaned: " + this.reservedItem.item_id);
 
             const data = {
 
-                transaction_status: 'Returned'
                 // item_name: this.returned.item_name,
                 // user_id: userStore.user.id
+                item_id: this.reservedItem.item_id,
+                item_name: this.reservedItem.item_name,
+                user_id: this.reservedItem.user_id,
+                transaction_status: 'On Loan',
             };
             //TODO create transaction
             // update item
             // delete reservation
-            await axios.patch('http://localhost:4000/update-transaction/' + this.returnedItem.transaction_id, data, {
+            await axios.post('http://localhost:4000/create-transaction/',  data , {
                 headers: {
                     Authorization: `Bearer ${userStore.authToken}`
                 }
             })
                 .then(response => {
                     console.log("res response: ", response.data);
-                    this.updateItemStatus();
+                    this.updateReservedItemStatus();
+                    this.deleteResevation();
+                })
+                .catch(error => {
+                    console.log(error);
+                })
+        },
+        async updateReservedItemStatus() {
+            console.log(this.reservedItem.item_id);
+            const data = {
+                status: 'On Loan'
+            }
+
+            await axios.patch('http://localhost:4000/update-item/' + this.reservedItem.item_id, data, {
+                headers: {
+                    Authorization: `Bearer ${userStore.authToken}`
+                }
+            })
+                .then(response => {
+                    console.log("res response update item: ", response.data);
+                    // finds item by id and renders new status to view 
+                    // for (let i = 0; i < this.items.length; i++) {
+                    //     if (this.reservations[i].res_id == this.reservedItem.transaction_id) {
+                    //         this.transactions[i].transaction_status = 'On Loan';
+                    //     }
+                    // }
+                    this.getAllReservations();
+                    this.$emit('update', 1);
+                })
+                .catch(error => {
+                    console.log(error);
+                })
+        },
+        async deleteResevation() {
+            // console.log(this.reservedItem.item_id);
+            // const data = {
+            //     status: 'On Loan'
+            // }
+
+            await axios.delete('http://localhost:4000/delete-reservation/' + this.reservedItem.res_id, {
+                headers: {
+                    Authorization: `Bearer ${userStore.authToken}`
+                }
+            })
+                .then(response => {
+                    console.log("Reservation Deleted: ", response.data);
                 })
                 .catch(error => {
                     console.log(error);

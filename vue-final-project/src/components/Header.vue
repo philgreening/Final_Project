@@ -20,7 +20,13 @@
   
             <ul class="navbar-nav mr-auto">
               <li class="nav-item mx-2">
-                <router-link to="/admin" class="nav-link"><strong>Admin</strong></router-link>
+                <router-link to="/admin-transactions" class="nav-link"><strong>Admin Transactions</strong></router-link>
+              </li>
+              <li class="nav-item mx-2">
+                <router-link to="/admin-reservations" class="nav-link"><strong>Admin Reservations</strong></router-link>
+              </li>
+              <li class="nav-item mx-2">
+                <router-link to="/admin-items" class="nav-link"><strong>Admin Items</strong></router-link>
               </li>
               <!-- <li class="nav-item mx-2">
                 <router-link to="/my-profile" class="nav-link"><strong>My Account</strong></router-link>

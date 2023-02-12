@@ -28,9 +28,20 @@ const router = createRouter({
       component: () => import('../views/Items.vue')
     },
     {
-      path: '/admin',
-      name: 'admin',
-      component: () => import('../views/Admin.vue')
+      path: '/admin-transactions',
+      name: 'admin-transactions',
+      component: () => import('../views/AdminTransactions.vue')
+    },
+    {
+      path: '/admin-reservations',
+      name: 'admin-reservations',
+      component: () => import('../views/AdminReservations.vue')
+    },
+    ,
+    {
+      path: '/admin-items',
+      name: 'admin-items',
+      component: () => import('../views/AdminItems.vue')
     }
   ]
 })

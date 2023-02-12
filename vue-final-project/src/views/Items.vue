@@ -8,7 +8,7 @@
     <p class="card-text" :key="item.status">{{ item.status }}</p>
     <template v-if="item.status == 'On Loan'">
     <template v-for="transaction in transactions" :key="transaction.transaction_id">
-    <template v-if="item.item_id === transaction.item_id">
+    <template v-if="item.item_id === transaction.item_id && transaction.transaction_status === 'On Loan'">
     <p class="card-text"> Due date: {{ formatDate(transaction.due_date) }}</p>
     </template>
 
@@ -48,7 +48,6 @@ import axios from 'axios';
 import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 import { useUserStore } from '../stores/userStore';
 import dayjs from 'dayjs';
-
 // import router from '../router';
 const userStore = useUserStore();
 const auth = getAuth()
@@ -158,11 +157,12 @@ export default {
           .then(response =>{
             console.log("res response upadte item: ", response.data);
             // finds item by id and renders new status to view 
-            for(let i=0; i<this.items.length; i++) {
-              if(this.items[i].item_id == this.reservedItem.item_id) {
-                this.items[i].status = 'Reserved';
-              }
-            }
+            // for(let i=0; i<this.items.length; i++) {
+            //   if(this.items[i].item_id == this.reservedItem.item_id) {
+            //     this.items[i].status = 'Reserved';
+            //   }
+            // }
+            this.getAllItems();
           })
           .catch(error => {
             console.log(error);

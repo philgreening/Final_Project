@@ -10,6 +10,7 @@
                     <th scope="col">Loan date</th>
                     <th scope="col">Due date</th>
                     <th scope="col">Date returned</th>
+                    <th scope="col">Return item?</th>
                 </tr>
             </thead>
             <tbody>
@@ -20,14 +21,20 @@
                         </td>
                     </template>
                     <td :key="transaction.transaction_status">{{ transaction.transaction_status }}
+                        <!-- <template v-if="transaction.transaction_status === 'On Loan'">
+                            <button type="button" @click="getIndex(transaction)" class="btn btn-danger"
+                                data-bs-toggle="modal" data-bs-target="#exampleModal">Return</button>
+                        </template> -->
+                    </td> 
+                    <td>{{ formatDate(transaction.loan_date) }}</td>
+                    <td>{{ formatDate(transaction.due_date) }}</td>
+                    <td>{{ formatDate(transaction.returned_date) }}</td>
+                    <td>
                         <template v-if="transaction.transaction_status === 'On Loan'">
                             <button type="button" @click="getIndex(transaction)" class="btn btn-danger"
                                 data-bs-toggle="modal" data-bs-target="#exampleModal">Return</button>
                         </template>
                     </td>
-                    <td>{{ formatDate(transaction.loan_date) }}</td>
-                    <td>{{ formatDate(transaction.due_date) }}</td>
-                    <td>{{ formatDate(transaction.returned_date) }}</td>
                 </tr>
             </tbody>
         </table>
@@ -173,11 +180,12 @@ export default {
                 .then(response => {
                     console.log("res response upadte item: ", response.data);
                     // finds item by id and renders new status to view 
-                    for (let i = 0; i < this.items.length; i++) {
-                        if (this.transactions[i].transaction_id == this.returnedItem.transaction_id) {
-                            this.transactions[i].transaction_status = 'Returned';
-                        }
-                    }
+                    // for (let i = 0; i < this.items.length; i++) {
+                    //     if (this.transactions[i].transaction_id == this.returnedItem.transaction_id) {
+                    //         this.transactions[i].transaction_status = 'Returned';
+                    //     }
+                    // }
+                    this.getAllTransactions();
                 })
                 .catch(error => {
                     console.log(error);
