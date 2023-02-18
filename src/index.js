@@ -107,6 +107,7 @@ app.post("/create-user", async(req,res)=>{
     const data = {
         first_name: req.body.first_name,
         last_name: req.body.last_name,
+        email: req.body.email,
         address: req.body.address,
         admin: false,
     };
@@ -131,7 +132,8 @@ app.get("/User/all", async(req,res)=>{
                 first_name: doc.data().first_name,
                 last_name: doc.data().last_name,
                 email: doc.data().email,
-                address: doc.data().address
+                address: doc.data().address,
+                admin: doc.data().admin
             }
             userArray.push(users);
         });
@@ -162,7 +164,8 @@ app.patch("/update-user/:id", async(req,res)=>{
             first_name: req.body.first_name,
             last_name: req.body.last_name,
             email: req.body.email,
-            address: req.body.address
+            address: req.body.address,
+            admin: req.body.admin
         };
 
         await userRef.update(data);
