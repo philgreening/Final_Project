@@ -28,6 +28,9 @@
               <li class="nav-item mx-2">
                 <router-link to="/admin-items" class="nav-link"><strong>Admin Items</strong></router-link>
               </li>
+              <li class="nav-item mx-2">
+                <router-link to="/admin-users" class="nav-link"><strong>Admin Users</strong></router-link>
+              </li>
               <!-- <li class="nav-item mx-2">
                 <router-link to="/my-profile" class="nav-link"><strong>My Account</strong></router-link>
               </li>

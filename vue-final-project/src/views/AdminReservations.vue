@@ -125,9 +125,6 @@ export default {
                 user_id: this.reservedItem.user_id,
                 transaction_status: 'On Loan',
             };
-            //TODO create transaction
-            // update item
-            // delete reservation
             await axios.post('http://localhost:4000/create-transaction/',  data , {
                 headers: {
                     Authorization: `Bearer ${userStore.authToken}`

@@ -37,12 +37,17 @@ const router = createRouter({
       name: 'admin-reservations',
       component: () => import('../views/AdminReservations.vue')
     },
-    ,
     {
       path: '/admin-items',
       name: 'admin-items',
       component: () => import('../views/AdminItems.vue')
-    }
+    },
+    {
+      path: '/admin-users',
+      name: 'admin-users',
+      component: () => import('../views/AdminUsers.vue')
+    },
+
   ]
 })
 

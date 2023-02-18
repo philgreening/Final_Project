@@ -56,12 +56,14 @@
             console.log("Succesfully registered!");
             console.log(data.user.uid);
             const uid = data.user.uid;
+            const userEmail = data.user.email;
 
             const formData = {
                 id: uid, 
                 first_name: firstName.value,
                 last_name: lastName.value,
-                address: address.value
+                address: address.value,
+                email: userEmail
                 };
 
          axios.post('http://localhost:4000/create-user', formData)

@@ -11,6 +11,7 @@
                     <th scope="col">Description</th>
                     <th scope="col">Status</th>
                     <th scope="col">Edit item</th>
+                    <th scope="col">Delete item</th>
                 </tr>
             </thead>
             <tbody>
@@ -21,15 +22,21 @@
                     <td>{{ item.status }}</td>
                     <td>
                         <!-- <template v-if="transaction.transaction_status === 'On Loan'"> -->
-                        <button type="button" @click="getIndex(item)" class="btn btn-danger" data-bs-toggle="modal"
+                        <button type="button" @click="getIndex(item)" class="btn btn-warning" data-bs-toggle="modal"
                             data-bs-target="#editItemModal">Edit Item</button>
                         <!-- </template> -->
+                    </td>
+                    <td>
+                        <button v-if="item.status === 'Available'" type="button" @click="getIndex(item)"
+                            class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteItemModal">Delete
+                            Item</button>
+                        <p v-else class="h6">Can't delete item: <br> {{ item.status }} </p>
                     </td>
                 </tr>
             </tbody>
         </table>
     </div>
-<!-- Edit Item modla -->
+    <!-- Edit Item modal -->
     <div class="modal fade" id="editItemModal" tabindex="-1" aria-labelledby="editItemModalLabel" aria-hidden="true">
         <form @submit.prevent="updateItem">
             <div class="modal-dialog">
@@ -95,7 +102,6 @@
                 </div>
             </div>
         </form>
-
     </div>
     <!-- Add item modal -->
     <div class="modal fade" id="addItemModal" tabindex="-1" aria-labelledby="addItemModalLabel" aria-hidden="true">
@@ -115,21 +121,24 @@
                             </div>
                             <div class="input-group mb-3">
                                 <div class="input-group-prepend">
-                                    <span class="input-group-text" id="item-name" >Item Name</span>
+                                    <span class="input-group-text" id="item-name">Item Name</span>
                                 </div>
-                                <input type="text" class="form-control" placeholder="Item Name" v-model="createItem.item_name">
+                                <input type="text" class="form-control" placeholder="Item Name"
+                                    v-model="createItem.item_name">
                             </div>
                             <div class="input-group mb-3">
                                 <div class="input-group-prepend">
                                     <span class="input-group-text" id="item-type">Item Type</span>
                                 </div>
-                                <input type="text" class="form-control" placeholder="Item Type"  v-model="createItem.item_type">
+                                <input type="text" class="form-control" placeholder="Item Type"
+                                    v-model="createItem.item_type">
                             </div>
                             <div class="input-group mb-3">
                                 <div class="input-group-prepend">
                                     <span class="input-group-text h-100" id="desc">Description</span>
                                 </div>
-                                <textarea class="form-control" placeholder="Describe the item..."  v-model="createItem.description"></textarea>
+                                <textarea class="form-control" placeholder="Describe the item..."
+                                    v-model="createItem.description"></textarea>
                             </div>
                             <!-- <div class="input-group mb-3">
             <div class="input-group-prepend">
@@ -162,6 +171,27 @@
         </form>
 
     </div>
+    <!-- delete item modal -->
+    <div class="modal fade" id="deleteItemModal" tabindex="-1" aria-labelledby="deleteItemModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteItemModel">Delete</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <h1>Do you wish to delete this item? </h1>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                    <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+                    <button type="button" class="btn btn-primary" @click="deleteItem()" data-bs-dismiss="modal">Yes
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 
 
 </template>
@@ -180,11 +210,12 @@ export default {
             items: [],
             errors: [],
             editItem: [],
-            createItem: 
-                {item_name:'',
-                 item_type:'',
-                  description:''
-                },
+            createItem:
+            {
+                item_name: '',
+                item_type: '',
+                description: ''
+            },
             success: ''
         }
     },
@@ -283,6 +314,21 @@ export default {
                         console.log(error);
                     })
             }
+        },
+        async deleteItem() {
+
+            await axios.delete('http://localhost:4000/delete-item/' + this.editItem.item_id, {
+                headers: {
+                    Authorization: `Bearer ${userStore.authToken}`
+                }
+            })
+                .then(response => {
+                    console.log("res response: ", response.data);
+                    this.getAllItems();
+                })
+                .catch(error => {
+                    console.log(error);
+                })
         },
         getIndex(item) {
             this.editItem = item;
