@@ -16,6 +16,7 @@ Create signup/in with google etc
 
 Add icons instead of buttons
 
+Secure API routes with auth middleware
 Tidy API into folders
 Open API documentation
 
