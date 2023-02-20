@@ -51,25 +51,25 @@
 
     <!-- delete user modal -->
     <!-- <div class="modal fade" id="deleteUserModal" tabindex="-1" aria-labelledby="deleteUserModalLabel"
-            aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="deleteUserModel">Delete</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <h1>Do you wish to delete {{user.first_name + " " + user.last_name}}? </h1>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
-                        <button type="button" class="btn btn-primary">Save changes</button>
-                        <button type="button" class="btn btn-primary" @click="removeUser()" data-bs-dismiss="modal">Yes
-                        </button>
+                aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="deleteUserModel">Delete</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <h1>Do you wish to delete {{user.first_name + " " + user.last_name}}? </h1>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                            <button type="button" class="btn btn-primary">Save changes</button>
+                            <button type="button" class="btn btn-primary" @click="removeUser()" data-bs-dismiss="modal">Yes
+                            </button>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </div> -->
+            </div> -->
 
     <!-- User transactions modal -->
     <div class="modal fade" id="userTransactionsModal" tabindex="-1" aria-labelledby="userTransactionsModalLabel"
@@ -88,39 +88,25 @@
                             <thead>
                                 <tr>
                                     <th scope="col">Item Name</th>
-                                    <th scope="col">User Name</th>
                                     <th scope="col">Transaction status</th>
                                     <th scope="col">Loan date</th>
                                     <th scope="col">Due date</th>
                                     <th scope="col">Date returned</th>
-                                    <th scope="col">Return item?</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr v-for="transaction in transactions" :key="transaction.transaction_id">
                                     <template v-if="transaction.user_id == user.user_id">
                                         <td>{{ transaction.item_name }}</td>
-                                        <template v-for="user in users" :key="user.user_id">
-                                            <td v-if="user.user_id === transaction.user_id">{{ user.first_name + ` ` +
-                                                user.last_name }}
-                                            </td>
-                                        </template>
-                                        <td :key="transaction.transaction_status">{{ transaction.transaction_status }}
-                                            <!-- <template v-if="transaction.transaction_status === 'On Loan'">
-                                <button type="button" @click="getIndex(transaction)" class="btn btn-danger"
-                                    data-bs-toggle="modal" data-bs-target="#exampleModal">Return</button>
-                            </template> -->
-                                        </td>
+                                        <td>{{ transaction.transaction_status }}</td>
                                         <td>{{ formatDate(transaction.loan_date) }}</td>
-                                        <td>{{ formatDate(transaction.due_date) }}</td>
+                                        <template
+                                            v-if="formatDate(transaction.due_date) < date && transaction.transaction_status === 'On Loan'">
+                                            <td> {{ formatDate(transaction.due_date) }} <span
+                                                    class="badge rounded-pill bg-danger">Overdue</span></td>
+                                        </template>
+                                        <td v-else>{{ formatDate(transaction.due_date) }} </td>
                                         <td>{{ formatDate(transaction.returned_date) }}</td>
-                                        <td>
-                                            <template v-if="transaction.transaction_status === 'On Loan'">
-                                                <button type="button" @click="getIndex(transaction)" class="btn btn-danger"
-                                                    data-bs-toggle="modal"
-                                                    data-bs-target="#userTransactionsModal">Return</button>
-                                            </template>
-                                        </td>
                                     </template>
                                 </tr>
                             </tbody>
@@ -150,7 +136,6 @@
                             <thead>
                                 <tr>
                                     <th scope="col">Item Name</th>
-                                    <th scope="col">User Name</th>
                                     <th scope="col">Reservation Date</th>
                                     <th scope="col">Confirm Loan</th>
                                 </tr>
@@ -159,10 +144,6 @@
                                 <tr v-for="reservation in reservations" :key="reservation.res_id">
                                     <template v-if="reservation.user_id == user.user_id">
                                         <td>{{ reservation.item_name }}</td>
-                                        <template v-for="user in users" :key="user.user_id">
-                                            <td v-if="user.user_id === reservation.user_id">{{ user.first_name + ` ` +
-                                                user.last_name }}</td>
-                                        </template>
                                         <td>{{ formatDate(reservation.res_date) }}</td>
                                         <td>
                                             <button type="button" @click="getResIndex(reservation)" class="btn btn-success"
@@ -182,9 +163,8 @@
         </div>
     </div>
 
-<!-- User current loans -->
-    <div class="modal fade" id="userLoansModal" tabindex="-1" aria-labelledby="userLoansModalLabel"
-        aria-hidden="true">
+    <!-- User current loans -->
+    <div class="modal fade" id="userLoansModal" tabindex="-1" aria-labelledby="userLoansModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
@@ -199,39 +179,31 @@
                             <thead>
                                 <tr>
                                     <th scope="col">Item Name</th>
-                                    <th scope="col">User Name</th>
                                     <th scope="col">Transaction status</th>
                                     <th scope="col">Loan date</th>
                                     <th scope="col">Due date</th>
-                                    <!-- <th scope="col">Date returned</th>
-                                    <th scope="col">Return item?</th> -->
+                                    <th scope="col">Return item?</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr v-for="transaction in transactions" :key="transaction.transaction_id">
-                                    <template v-if="transaction.user_id == user.user_id && transaction.transaction_status == 'On Loan'">
+                                    <template
+                                        v-if="transaction.user_id == user.user_id && transaction.transaction_status == 'On Loan'">
                                         <td>{{ transaction.item_name }}</td>
-                                        <template v-for="user in users" :key="user.user_id">
-                                            <td v-if="user.user_id === transaction.user_id">{{ user.first_name + ` ` +
-                                                user.last_name }}
-                                            </td>
-                                        </template>
-                                        <td :key="transaction.transaction_status">{{ transaction.transaction_status }}
-                                            <!-- <template v-if="transaction.transaction_status === 'On Loan'">
-                                <button type="button" @click="getIndex(transaction)" class="btn btn-danger"
-                                    data-bs-toggle="modal" data-bs-target="#exampleModal">Return</button>
-                            </template> -->
-                                        </td>
+
+                                        <td>{{ transaction.transaction_status }}</td>
                                         <td>{{ formatDate(transaction.loan_date) }}</td>
-                                        <td>{{ formatDate(transaction.due_date) }}</td>
-                                        <!-- <td>{{ formatDate(transaction.returned_date) }}</td>
+                                        <template v-if="formatDate(transaction.due_date) < date">
+                                            <td> {{ formatDate(transaction.due_date) }} <span
+                                                    class="badge rounded-pill bg-danger">Overdue</span></td>
+                                        </template>
+                                        <td v-else>{{ formatDate(transaction.due_date) }} </td>
                                         <td>
                                             <template v-if="transaction.transaction_status === 'On Loan'">
-                                                <button type="button" @click="getIndex(transaction)" class="btn btn-danger"
-                                                    data-bs-toggle="modal"
-                                                    data-bs-target="#userLoansModal">Return</button>
+                                                <button type="button" @click="getTransactionIndex(transaction)" class="btn btn-danger"
+                                                    data-bs-toggle="modal" data-bs-target="#returnModal">Return</button>
                                             </template>
-                                        </td> -->
+                                        </td>
                                     </template>
                                 </tr>
                             </tbody>
@@ -241,6 +213,47 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Return Item Confirmation Modal -->
+    <div class="modal fade" id="returnModal" tabindex="-1" aria-labelledby="returnModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="returnModalLabel">Return item</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <h1>Confirm item returned? </h1>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                    <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+                    <button type="button" class="btn btn-primary" @click="returnItem()" data-bs-dismiss="modal">Yes
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Confirm Loan  Modal -->
+    <div class="modal fade" id="confirmLoanModal" tabindex="-1" aria-labelledby="confirmLoanModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="confirmLoanModalLabel"> {{ reservedItem.item_name }}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <h1>Confirm Loan? </h1>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                    <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+                    <button type="button" class="btn btn-primary" @click="loanItem()" data-bs-dismiss="modal">Yes
+                    </button>
                 </div>
             </div>
         </div>
@@ -263,7 +276,10 @@ export default {
             users: [],
             user: [],
             transactions: [],
-            reservations: []
+            returnedItem: [],
+            reservations: [],
+            reservedItem: [],
+            date: Date()
         }
     },
     mounted() {
@@ -273,6 +289,10 @@ export default {
         getIndex(user) {
             this.user = user;
             console.log("called:", this.user);
+        },
+        getTransactionIndex(transaction) {
+            this.returnedItem = transaction;
+            console.log("called:", this.returnedItem);
         },
         async getAllUsers() {
             console.log('token get all: ', userStore.authToken)
@@ -358,6 +378,112 @@ export default {
                 return '';
             }
         },
+        async returnItem() {
+            console.log("returned: " + this.returnedItem.item_id);
+
+            const data = {
+
+                transaction_status: 'Returned'
+            };
+
+            await axios.patch('http://localhost:4000/update-transaction/' + this.returnedItem.transaction_id, data, {
+                headers: {
+                    Authorization: `Bearer ${userStore.authToken}`
+                }
+            })
+                .then(response => {
+                    console.log("res response: ", response.data);
+                    this.updateItemStatus();
+                })
+                .catch(error => {
+                    console.log(error);
+                })
+        },
+        async updateItemStatus() {
+            console.log(this.returnedItem.item_id);
+            const data = {
+                status: 'Available'
+            }
+
+            await axios.patch('http://localhost:4000/update-item/' + this.returnedItem.item_id, data, {
+                headers: {
+                    Authorization: `Bearer ${userStore.authToken}`
+                }
+            })
+                .then(response => {
+                    console.log("res response upadte item: ", response.data);
+                    // finds item by id and renders new status to view 
+                    // for (let i = 0; i < this.items.length; i++) {
+                    //     if (this.transactions[i].transaction_id == this.returnedItem.transaction_id) {
+                    //         this.transactions[i].transaction_status = 'Returned';
+                    //     }
+                    // }
+                    this.getAllTransactions();
+                })
+                .catch(error => {
+                    console.log(error);
+                })
+        },
+        getResIndex(reservation) {
+            this.reservedItem = reservation;
+            console.log(this.reservedItem);
+        },
+        async loanItem() {
+            console.log("Loaned: " + this.reservedItem.item_id);
+
+            const data = {
+                item_id: this.reservedItem.item_id,
+                item_name: this.reservedItem.item_name,
+                user_id: this.reservedItem.user_id,
+                transaction_status: 'On Loan',
+            };
+            await axios.post('http://localhost:4000/create-transaction/',  data , {
+                headers: {
+                    Authorization: `Bearer ${userStore.authToken}`
+                }
+            })
+                .then(response => {
+                    console.log("res response: ", response.data);
+                    this.updateReservedItemStatus();
+                    this.deleteResevation();
+                })
+                .catch(error => {
+                    console.log(error);
+                })
+        },
+        async updateReservedItemStatus() {
+            console.log(this.reservedItem.item_id);
+            const data = {
+                status: 'On Loan'
+            }
+
+            await axios.patch('http://localhost:4000/update-item/' + this.reservedItem.item_id, data, {
+                headers: {
+                    Authorization: `Bearer ${userStore.authToken}`
+                }
+            })
+                .then(response => {
+                    console.log("res response update item: ", response.data);
+                })
+                .catch(error => {
+                    console.log(error);
+                })
+        },
+        async deleteResevation() {
+            await axios.delete('http://localhost:4000/delete-reservation/' + this.reservedItem.res_id, {
+                headers: {
+                    Authorization: `Bearer ${userStore.authToken}`
+                }
+            })
+                .then(response => {
+                    console.log("Reservation Deleted: ", response.data);
+                    this.getAllReservations();
+                })
+                .catch(error => {
+                    console.log(error);
+                })
+        },
+
 
 
 

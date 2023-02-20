@@ -47,6 +47,21 @@ const router = createRouter({
       name: 'admin-users',
       component: () => import('../views/AdminUsers.vue')
     },
+    {
+      path: '/user-reservations',
+      name: 'user-reservations',
+      component: () => import('../views/UserReservations.vue')
+    },
+    {
+      path: '/user-transactions',
+      name: 'user-transactions',
+      component: () => import('../views/UserTransactions.vue')
+    },
+    {
+      path: '/user-currentLoans',
+      name: 'user-currentLoans',
+      component: () => import('../views/UserCurrentLoans.vue')
+    },
 
   ]
 })
