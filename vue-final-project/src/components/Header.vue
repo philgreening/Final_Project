@@ -49,11 +49,11 @@
             <li class="nav-item dropdown mx-2">
 
               <router-link to="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"
-                aria-expanded="false">My Account
+                aria-expanded="false" v-model="username"> {{ username }}
               </router-link>
               <ul class="dropdown-menu">
                 <li>
-                  <router-link to="" class="dropdown-item">My Details</router-link>
+                  <router-link to="/user-details" class="dropdown-item">My Details</router-link>
                 </li>
                 <li>
                   <hr class="dropdown-divider">
@@ -104,28 +104,47 @@
 
 <script setup>
 import { onMounted, ref } from 'vue';
-import axios from 'axios';
-import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
+import {  onAuthStateChanged, signOut } from "firebase/auth";
 import router from '../router';
+import { auth }from '../main.js';
 import { useUserStore } from '../stores/userStore';
+import { storeToRefs } from 'pinia';
 
 const userStore = useUserStore();
 const isLoggedIn = ref(false);
-const auth = getAuth()
+const username = ref()
+username.value = userStore.user.name
+
+
+
 
 onMounted(() => {
+  
   onAuthStateChanged(auth, (user) => {
     if (user) {
       isLoggedIn.value = true;
+
+      //Sets username on user account dropdown
+//       setTimeout(() =>{
+//       
+//       console.log("username",username.value);
+//  }, 500)
     } else {
       isLoggedIn.value = false;
+      username.value = null;
     }
   })
 });
 
+
+
 const handleSignOut = () => {
+  //console.log("username",username);
   signOut(auth).then(() => {
+    console.log('logoutussername',username)
     userStore.$reset();
+    localStorage.clear();
+    console.log("on logout:",userStore.user)
     router.push("/");
   });
 };

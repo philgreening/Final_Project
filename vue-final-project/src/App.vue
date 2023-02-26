@@ -6,28 +6,74 @@
 </template>
 
 <script setup>
-  import { RouterLink, RouterView } from 'vue-router'
+  import { RouterView } from 'vue-router'
   import Header from './components/Header.vue'
-  import { getAuth, onAuthStateChanged } from '@firebase/auth';
+  // import { getAuth, onAuthStateChanged } from '@firebase/auth';
   import { useUserStore } from './stores/userStore';
+  import { onMounted } from 'vue';  
 
-  const auth = getAuth()
+  // const auth = getAuth()
   const userStore = useUserStore();
+  let currentUserId = userStore.user.first_name;
 
-  onAuthStateChanged(auth,(user) => {
-  if (user) {
-    // User is signed in.
-     user.getIdToken().then((idToken) => {
-      userStore.authToken = idToken;
-      userStore.user.id = user.uid;
-    })
-  } else {
-    // No user is signed in.
-    console.log("no user signed in")
-  }
-})
+  onMounted(()=>{
+    userStore.init();
+    console.log("app.vue init",currentUserId)
+    
+  })
+
+//   onAuthStateChanged(auth,(user) => {
+//   if (user) {
+//     // User is signed in.
+//      user.getIdToken().then((idToken) => {
+//       userStore.authToken = idToken;
+//       userStore.user.id = user.uid;
+//       console.log("on app.vue: ", currentUserId)
+//       // getUser();
+//     })
+//   } else {
+//     // No user is signed in.
+//     console.log("no user signed in")
+//   }
+// })
+
+//   const getUser = async() => {
+//     console.log(currentUserId);
+//     await axios.get('http://localhost:4000/User/' + currentUserId, {
+//                 headers: {
+//                     Authorization: `Bearer ${userStore.authToken}`
+//                 }
+//             })
+//                 .then(response => {
+//                     console.log("Get User res response: ", response.data)
+//                     // this.users = response.data;
+//                     userStore.user.first_name = response.data.first_name;
+//                     userStore.user.last_name = response.data.last_name;
+//                     userStore.user.admin = response.data.admin;
+//                     console.log("getUser store", userStore.user);
+//                 })
+//                 .catch(error => {
+//                     console.log(error);
+//                 })
+
+//  }
 
 
+  
+//  async getAllUsers() {
+//             await axios.get('http://localhost:4000/User/all', {
+//                 headers: {
+//                     Authorization: `Bearer ${userStore.authToken}`
+//                 }
+//             })
+//                 .then(response => {
+//                     console.log("res response: ", response.data)
+//                     this.users = response.data;
+//                 })
+//                 .catch(error => {
+//                     console.log(error);
+//                 })
+//         },
 
 
 

@@ -14,8 +14,6 @@ import "bootstrap/dist/js/bootstrap.js"
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 
-// TODO: Replace the following with your app's Firebase project configuration
-// See: https://firebase.google.com/docs/web/learn-more#config-object
 const firebaseConfig = {
     apiKey: "AIzaSyCDqf1KgJPE8CkHzL3quKcILcRo6Xo_8XM",
     authDomain: "final-project-afe71.firebaseapp.com",
@@ -28,6 +26,7 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
+let appp
 
 
 // Initialize Firebase Authentication and get a reference to the service
@@ -35,19 +34,34 @@ const auth = getAuth(app);
 
 const pinia = createPinia();
 
-// Sets a persistant store session
-if(localStorage.getItem("state")) {
-    pinia.state.value = JSON.parse(localStorage.getItem("state"));
-};
+// watch(
+//     pinia.state,
+//     (state) => {
+//       // persist the whole state to the local storage whenever it changes
+//       localStorage.setItem('piniaState', JSON.stringify(state))
+//     },
+//     { deep: true }
+//   )
 
-watch(
-    pinia.state,
-    (state) => {
-        localStorage.setItem("state", JSON.stringify(state));
-    },
-    { deep: true}
-);
+// Sets a persistant store session
+// if(localStorage.getItem("state")) {
+//     pinia.state.value = JSON.parse(localStorage.getItem("state"));
+// };
+
+// watch(
+//     pinia.state,
+//     (state) => {
+//         localStorage.setItem("state", JSON.stringify(state));
+//     },
+//     { deep: true}
+// );
+// auth.onAuthStateChanged(()=>{
+//     if(!appp) {
+//         createApp(App).use(pinia).use(router).use(VueAxios, axios).mount('#app')
+//     }
+// })
 
 createApp(App).use(pinia).use(router).use(VueAxios, axios).mount('#app')
+export { auth }
 
 

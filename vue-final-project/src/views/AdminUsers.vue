@@ -265,7 +265,7 @@
 
 import { useUserStore } from '../stores/userStore';
 import axios from 'axios';
-import { getAuth, deleteUser } from '@firebase/auth';
+// import { getAuth, deleteUser } from '@firebase/auth';
 
 
 const userStore = useUserStore();
@@ -295,7 +295,7 @@ export default {
             console.log("called:", this.returnedItem);
         },
         async getAllUsers() {
-            console.log('token get all: ', userStore.authToken)
+            console.log(' get all users: ', userStore.user)
             await axios.get('http://localhost:4000/User/all', {
                 headers: {
                     Authorization: `Bearer ${userStore.authToken}`

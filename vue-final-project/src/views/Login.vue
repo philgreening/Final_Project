@@ -11,20 +11,23 @@
 
 <script setup>
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
-
+import { auth } from '../main.js'
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 const router = useRouter();
 const email = ref("");
 const password = ref("");
 
-const auth = getAuth();
+const username = null;
+
+
+// const auth = getAuth();
 const login = () => {
     signInWithEmailAndPassword(auth, email.value, password.value)
   .then((userCredential) => {
     // Signed in 
     const user = userCredential.user;
-    console.log("user:",user);
+    console.log("userlogin:",user);
     router.push("/items");
     // ...
   })
