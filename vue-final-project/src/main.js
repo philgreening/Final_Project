@@ -59,9 +59,7 @@ const pinia = createPinia();
 //     if(!appp) {
 //         createApp(App).use(pinia).use(router).use(VueAxios, axios).mount('#app')
 //     }
-// })
+// }
 
 createApp(App).use(pinia).use(router).use(VueAxios, axios).mount('#app')
 export { auth }
-
-

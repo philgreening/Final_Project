@@ -18,7 +18,7 @@
 
   onMounted(()=>{
     userStore.init();
-    console.log("app.vue init",currentUserId)
+    // console.log("app.vue init",currentUserId)
     
   })
 

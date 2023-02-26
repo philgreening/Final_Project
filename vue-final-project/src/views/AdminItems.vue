@@ -1,8 +1,9 @@
 <template>
     <div class="container p-4">
-        <h1 class="text-center"> Items</h1>
-        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addItemModal">Add
-            Item</button>
+        <h1 class="text-center">Items</h1>
+        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addItemModal">
+            Add Item
+        </button>
         <table class="table p-4">
             <thead>
                 <tr>
@@ -23,14 +24,20 @@
                     <td>
                         <!-- <template v-if="transaction.transaction_status === 'On Loan'"> -->
                         <button type="button" @click="getIndex(item)" class="btn btn-warning" data-bs-toggle="modal"
-                            data-bs-target="#editItemModal">Edit Item</button>
+                            data-bs-target="#editItemModal">
+                            Edit Item
+                        </button>
                         <!-- </template> -->
                     </td>
                     <td>
                         <button v-if="item.status === 'Available'" type="button" @click="getIndex(item)"
-                            class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteItemModal">Delete
-                            Item</button>
-                        <p v-else class="h6">Can't delete item: <br> {{ item.status }} </p>
+                            class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteItemModal">
+                            Delete Item
+                        </button>
+                        <p v-else class="h6">
+                            Can't delete item: <br />
+                            {{ item.status }}
+                        </p>
                     </td>
                 </tr>
             </tbody>
@@ -48,7 +55,6 @@
                     </div>
                     <div class="modal-body">
                         <div class="container">
-
                             <div class="text-center my-2">
                                 <p class="h3">Edit Item</p>
                             </div>
@@ -57,14 +63,14 @@
                                     <span class="input-group-text" id="item-name">Item Name</span>
                                 </div>
                                 <input type="text" class="form-control" placeholder="Item Name"
-                                    v-model.lazy="editItem.item_name">
+                                    v-model.lazy="editItem.item_name" />
                             </div>
                             <div class="input-group mb-3">
                                 <div class="input-group-prepend">
                                     <span class="input-group-text" id="item-type">Item Type</span>
                                 </div>
                                 <input type="text" class="form-control" placeholder="Item Type"
-                                    v-model.lazy="editItem.item_type">
+                                    v-model.lazy="editItem.item_type" />
                             </div>
                             <div class="input-group mb-3">
                                 <div class="input-group-prepend">
@@ -73,15 +79,17 @@
                                 <textarea class="form-control" placeholder="Describe the item..."
                                     v-model.lazy="editItem.description"></textarea>
                             </div>
-                            <!-- <div class="input-group mb-3">
-            <div class="input-group-prepend">
-              <span class="input-group-text" id="profileimage">Profile Image </span>
-            </div>
-            <input type="file" class="form-control" @change="onFileUpload">
-          </div> -->
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="profileimage">Profile Image </span>
+                                </div>
+                                <input type="file" class="form-control" @change="onFileUpload">
+                            </div>
                             <!-- display error messages -->
                             <div class="alert alert-danger mb-3" role="alert" v-if="errors.length">
-                                <p class="text-center" v-for="error in errors" v-bind:key="error">{{ error }}</p>
+                                <p class="text-center" v-for="error in errors" v-bind:key="error">
+                                    {{ error }}
+                                </p>
                             </div>
                             <!-- display success message -->
                             <div class="alert alert-success mb-3" role="alert" v-if="success.length">
@@ -93,12 +101,12 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" @click="clearAlerts()" class="btn btn-secondary"
-                            data-bs-dismiss="modal">Close</button>
+                        <button type="button" @click="clearAlerts()" class="btn btn-secondary" data-bs-dismiss="modal">
+                            Close
+                        </button>
                         <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
                         <button type="submit" class="btn btn-primary">Save changes</button>
                     </div>
-
                 </div>
             </div>
         </form>
@@ -115,23 +123,22 @@
                     </div>
                     <div class="modal-body">
                         <div class="container">
-
                             <div class="text-center my-2">
                                 <p class="h3">Add Item</p>
                             </div>
                             <div class="input-group mb-3">
                                 <div class="input-group-prepend">
-                                    <span class="input-group-text" id="item-name">Item Name</span>
+                                    <span class="input-group-text" id="item-name">Item name</span>
                                 </div>
                                 <input type="text" class="form-control" placeholder="Item Name"
-                                    v-model="createItem.item_name">
+                                    v-model="createItem.item_name" />
                             </div>
                             <div class="input-group mb-3">
                                 <div class="input-group-prepend">
-                                    <span class="input-group-text" id="item-type">Item Type</span>
+                                    <span class="input-group-text" id="item-type">Item type</span>
                                 </div>
                                 <input type="text" class="form-control" placeholder="Item Type"
-                                    v-model="createItem.item_type">
+                                    v-model="createItem.item_type" />
                             </div>
                             <div class="input-group mb-3">
                                 <div class="input-group-prepend">
@@ -140,15 +147,18 @@
                                 <textarea class="form-control" placeholder="Describe the item..."
                                     v-model="createItem.description"></textarea>
                             </div>
-                            <!-- <div class="input-group mb-3">
-            <div class="input-group-prepend">
-              <span class="input-group-text" id="profileimage">Profile Image </span>
-            </div>
-            <input type="file" class="form-control" @change="onFileUpload">
-          </div> -->
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="itemimage">Item image
+                                    </span>
+                                </div>
+                                <input type="file" class="form-control" @change="onFileUpload" />
+                            </div>
                             <!-- display error messages -->
                             <div class="alert alert-danger mb-3" role="alert" v-if="errors.length">
-                                <p class="text-center" v-for="error in errors" v-bind:key="error">{{ error }}</p>
+                                <p class="text-center" v-for="error in errors" v-bind:key="error">
+                                    {{ error }}
+                                </p>
                             </div>
                             <!-- display success message -->
                             <div class="alert alert-success mb-3" role="alert" v-if="success.length">
@@ -160,20 +170,18 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" @click="clearAlerts()" class="btn btn-secondary"
-                            data-bs-dismiss="modal">Close</button>
+                        <button type="button" @click="clearAlerts()" class="btn btn-secondary" data-bs-dismiss="modal">
+                            Close
+                        </button>
                         <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
                         <button type="submit" class="btn btn-primary">Save changes</button>
                     </div>
-
                 </div>
             </div>
         </form>
-
     </div>
     <!-- delete item modal -->
-    <div class="modal fade" id="deleteItemModal" tabindex="-1" aria-labelledby="deleteItemModalLabel"
-        aria-hidden="true">
+    <div class="modal fade" id="deleteItemModal" tabindex="-1" aria-labelledby="deleteItemModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -181,26 +189,26 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <h1>Do you wish to delete this item? </h1>
+                    <h1>Do you wish to delete this item?</h1>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        No
+                    </button>
                     <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
-                    <button type="button" class="btn btn-primary" @click="deleteItem()" data-bs-dismiss="modal">Yes
+                    <button type="button" class="btn btn-primary" @click="deleteItem()" data-bs-dismiss="modal">
+                        Yes
                     </button>
                 </div>
             </div>
         </div>
     </div>
-
-
 </template>
 
-<script >
-
-import { onMounted, reactive, ref } from 'vue';
-import { useUserStore } from '../stores/userStore';
-import axios from 'axios';
+<script>
+import { onMounted, reactive, ref } from "vue";
+import { useUserStore } from "../stores/userStore";
+import axios from "axios";
 
 const userStore = useUserStore();
 
@@ -210,125 +218,129 @@ export default {
             items: [],
             errors: [],
             editItem: [],
-            createItem:
-            {
-                item_name: '',
-                item_type: '',
-                description: ''
+            createItem: {
+                item_name: "",
+                item_type: "",
+                description: "",
             },
-            success: ''
-        }
+            success: "",
+        };
     },
     mounted() {
         this.getAllItems();
     },
     methods: {
         async getAllItems() {
-            console.log('token get all: ', userStore.authToken)
-            await axios.get('http://localhost:4000/item/all', {
-                headers: {
-                    Authorization: `Bearer ${userStore.authToken}`
-                }
-            })
-                .then(response => {
-                    console.log(response.data)
+            console.log("token get all: ", userStore.authToken);
+            await axios
+                .get("http://localhost:4000/item/all", {
+                    headers: {
+                        Authorization: `Bearer ${userStore.authToken}`,
+                    },
+                })
+                .then((response) => {
+                    console.log(response.data);
                     this.items = response.data;
                 })
-                .catch(error => {
-                    console.log(error)
-                })
+                .catch((error) => {
+                    console.log(error);
+                });
         },
         async updateItem() {
             // reset alert messages
             this.errors = [];
-            this.success = '';
+            this.success = "";
 
             // Conditions for error handling
-            if (this.editItem.item_name === '') {
-                this.errors.push('Please enter an item name')
+            if (this.editItem.item_name === "") {
+                this.errors.push("Please enter an item name");
             }
-            if (this.editItem.item_type === '') {
-                this.errors.push('Please enter an item type')
+            if (this.editItem.item_type === "") {
+                this.errors.push("Please enter an item type");
             }
-            if (this.editItem.description === '') {
-                this.errors.push('Please describe your item')
+            if (this.editItem.description === "") {
+                this.errors.push("Please describe your item");
             }
             // If no errors, then submit form data
             if (!this.errors.length) {
-
                 const formData = {
                     item_name: this.editItem.item_name,
                     item_type: this.editItem.item_type,
                     description: this.editItem.description,
-                }
+                };
 
-                await axios.patch('http://localhost:4000/update-item/' + this.editItem.item_id, formData, {
-                    headers: {
-                        Authorization: `Bearer ${userStore.authToken}`
-                    }
-                })
-                    .then(response => {
+                await axios
+                    .patch(
+                        "http://localhost:4000/update-item/" + this.editItem.item_id,
+                        formData,
+                        {
+                            headers: {
+                                Authorization: `Bearer ${userStore.authToken}`,
+                            },
+                        }
+                    )
+                    .then((response) => {
                         console.log("res response upadte item: ", response.data);
                         this.success = "Item updated";
                     })
-                    .catch(error => {
+                    .catch((error) => {
                         console.log(error);
-                    })
+                    });
             }
         },
         async addItem() {
             // reset alert messages
             this.errors = [];
-            this.success = '';
+            this.success = "";
 
             // Conditions for error handling
-            if (this.createItem.item_name === '') {
-                this.errors.push('Please enter an item name')
+            if (this.createItem.item_name === "") {
+                this.errors.push("Please enter an item name");
             }
-            if (this.createItem.item_type === '') {
-                this.errors.push('Please enter an item type')
+            if (this.createItem.item_type === "") {
+                this.errors.push("Please enter an item type");
             }
-            if (this.createItem.description === '') {
-                this.errors.push('Please describe your item')
+            if (this.createItem.description === "") {
+                this.errors.push("Please describe your item");
             }
             // If no errors, then submit form data
             if (!this.errors.length) {
-
                 const formData = {
                     item_name: this.createItem.item_name,
                     item_type: this.createItem.item_type,
                     description: this.createItem.description,
-                    status: 'Available'
-                }
+                    status: "Available",
+                };
                 //Call api and send formData to create item
-                await axios.post('http://localhost:4000/create-item/', formData, {
-                    headers: {
-                        Authorization: `Bearer ${userStore.authToken}`
-                    }
-                })
-                    .then(response => {
+                await axios
+                    .post("http://localhost:4000/create-item/", formData, {
+                        headers: {
+                            Authorization: `Bearer ${userStore.authToken}`,
+                        },
+                    })
+                    .then((response) => {
                         console.log("Item created: ", response.data);
                         this.success = "Item added";
                     })
-                    .catch(error => {
+                    .catch((error) => {
                         console.log(error);
-                    })
+                    });
             }
         },
         async deleteItem() {
-
-            await axios.delete('http://localhost:4000/delete-item/' + this.editItem.item_id, {
-                headers: {
-                    Authorization: `Bearer ${userStore.authToken}`
-                }
-            })
-                .then(response => {
+            await axios
+                .delete("http://localhost:4000/delete-item/" + this.editItem.item_id, {
+                    headers: {
+                        Authorization: `Bearer ${userStore.authToken}`,
+                    },
+                })
+                .then((response) => {
                     console.log("res response: ", response.data);
                     this.getAllItems();
                 })
-                .catch(error => {
+                .catch((error) => {
                     console.log(error);
-                })
+                });
         },
         getIndex(item) {
             this.editItem = item;
@@ -336,10 +348,9 @@ export default {
         },
         clearAlerts() {
             this.errors = [];
-            this.success = '';
+            this.success = "";
             this.getAllItems();
-        }
-
-    }
+        },
+    },
 };
 </script>
