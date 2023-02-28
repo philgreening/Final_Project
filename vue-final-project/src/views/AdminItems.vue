@@ -152,7 +152,7 @@
                                     <span class="input-group-text" id="itemimage">Item image
                                     </span>
                                 </div>
-                                <input type="file" class="form-control" @change="onFileUpload" />
+                                <input type="file" class="form-control" @change="onFileSelected" />
                             </div>
                             <!-- display error messages -->
                             <div class="alert alert-danger mb-3" role="alert" v-if="errors.length">
@@ -224,6 +224,8 @@ export default {
                 description: "",
             },
             success: "",
+            selectedFile: null,
+            imageUrl: null
         };
     },
     mounted() {
@@ -305,22 +307,35 @@ export default {
             }
             // If no errors, then submit form data
             if (!this.errors.length) {
-                const formData = {
-                    item_name: this.createItem.item_name,
-                    item_type: this.createItem.item_type,
-                    description: this.createItem.description,
-                    status: "Available",
-                };
+
+                let formData = new FormData();
+                formData.append('item_name',this.createItem.item_name);
+                formData.append('item_type',this.createItem.item_type);
+                formData.append('description', this.createItem.description);
+                formData.append('status', "Available");
+                formData.append('image', this.selectedFile);
+                
+
+
+                // const formData = {
+                //     item_name: this.createItem.item_name,
+                //     item_type: this.createItem.item_type,
+                //     description: this.createItem.description,
+                //     status: "Available",
+                // };
                 //Call api and send formData to create item
                 await axios
                     .post("http://localhost:4000/create-item/", formData, {
                         headers: {
                             Authorization: `Bearer ${userStore.authToken}`,
+                            "Content-Type": "multipart/form-data"
                         },
                     })
                     .then((response) => {
                         console.log("Item created: ", response.data);
                         this.success = "Item added";
+                        this.imageUrl = response.data.imageUrl;
+                        console.log(this.imageUrl);
                     })
                     .catch((error) => {
                         console.log(error);
@@ -351,6 +366,9 @@ export default {
             this.success = "";
             this.getAllItems();
         },
+        onFileSelected(event){
+            this.selectedFile = event.target.files[0];
+        }
     },
 };
 </script>

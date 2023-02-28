@@ -1,13 +1,22 @@
 const express = require('express');
 const cors = require('cors');
+// const multer = require('multer');
+const sharp = require('sharp');
+const { v4: uuidv4 } = require('uuid');
+const fs = require('fs');
 
 const db = require('./config');
 
-const app = express()
+const app = express();
 const port = 4000;
+
+// Set up multer to handle file uploads
+// const upload = multer({ dest: "uploads/" });
 
 const bodyParser = require("body-parser");
 const authenticate = require('./middleware/middlewareAuth');
+const upload = require('./middleware/middlewareFile');
+
 
 app.use(cors());
 app.use(express.json());
@@ -18,22 +27,112 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 ///////////////Item Routes///////////////
 
-app.post("/create-item", async(req,res)=>{
-    try{
-    const data = {
-        item_name: req.body.item_name,
-        item_type: req.body.item_type,
-        description: req.body.description,
-        status: req.body.status
-    };
-    console.log("Item data ", data);
-    await db.Items.add(data);
-    res.send({msg:"Item Added"});
-}catch(error){
-    console.log("" + error)
-    res.send({msg: "" + error});
-}
-});
+// app.post("/create-item", upload, async(req,res)=>{
+
+//     upload(req, res, async (err) => {
+//         if (err) {
+//           console.log("error line 26 " + err);
+//           res.send({ msg: err });
+//           return;
+//         }
+
+
+//     try{
+
+        
+
+//     const file = req.file;
+//     const bucket = db.admin.storage().bucket();
+//     console.log("file: ", file);
+
+//     const imageBuffer = await sharp(file.path)
+//         .resize(250,250)
+//         .jpeg()
+//         .toBuffer()
+
+//     console.log("img: ",imageBuffer);
+        
+//     const storageFile = await bucket.upload(imageBuffer , {
+//         destination: `images/${uuidv4()}`,
+//         metadata: {
+//             contentType: file.mimetype,
+//         },
+//         });
+
+//     // Delete the file from the server
+//     fs.unlinkSync(file.path);
+
+//     const imageUrl = storageFile[0].metadata.mediaLink;
+
+//     const data = {
+//         item_name: req.body.item_name,
+//         item_type: req.body.item_type,
+//         description: req.body.description,
+//         status: req.body.status,
+//         imageUrl: imageUrl
+//     };
+
+//     console.log("Item data ", data);
+//     await db.Items.add(data);
+//     res.send({msg:"Item Added"});
+// }catch(error){
+//     console.log("error line 70 " + error)
+//     res.send({msg: "" + error});
+// }
+// }
+// });
+
+app.post("/create-item", authenticate, (req, res) => {
+    upload(req, res, async (err) => {
+      if (err) {
+        console.log("error line 26 " + err);
+        res.send({ msg: err });
+        return;
+      }
+  
+      try {
+        const file = req.file;
+        const bucket = db.admin.storage().bucket();
+        console.log("file: ", file.path);
+  
+        const processImage = await sharp(file.path)
+          .resize(250, 250)
+          .jpeg()
+          .toFile('uploads/thumb_'+ file.originalname)
+        //   .toBuffer();
+
+        const image = ('uploads/thumb_'+ file.originalname);
+  
+        const storageFile = await bucket.upload(image, {
+          destination: `images/${uuidv4()}`,
+          metadata: {
+            contentType: file.mimetype,
+          },
+        });
+  
+        // Delete the files from the server
+        fs.unlinkSync(file.path);
+        fs.unlinkSync(image);
+  
+        const imageUrl = storageFile[0].metadata.mediaLink;
+  
+        const data = {
+          item_name: req.body.item_name,
+          item_type: req.body.item_type,
+          description: req.body.description,
+          status: req.body.status,
+          imageUrl: imageUrl,
+        };
+  
+        console.log("Item data ", data);
+        await db.Items.add(data);
+        res.send({ msg: "Item Added" });
+      } catch (error) {
+        console.log("error line 70 " + error);
+        res.send({ msg: "" + error });
+      }
+    });
+  });
 
 app.get("/item/all", authenticate, async(req,res)=>{
     try {
@@ -45,7 +144,8 @@ app.get("/item/all", authenticate, async(req,res)=>{
                 item_name: doc.data().item_name,
                 item_type: doc.data().item_type,
                 description: doc.data().description,
-                status: doc.data().status
+                status: doc.data().status,
+                imageUrl: doc.data().imageUrl
             }
             itemArray.push(items);
         });
@@ -55,6 +155,7 @@ app.get("/item/all", authenticate, async(req,res)=>{
         res.send({msg: "" + error })
     }
 });
+
 
 app.get("/item/:id", async(req,res)=>{
     try {

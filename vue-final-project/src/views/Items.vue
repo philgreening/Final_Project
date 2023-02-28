@@ -1,7 +1,7 @@
 <template>
-  <div class="container-fluid" v-for="(item, index) in items" :key="item.item_id">
+  <div class="container-fluid" v-for="item in items" :key="item.item_id">
     <div class="card m-5" style="width: 18rem;">
-  <img src="..." class="card-img-top" alt="...">
+  <img v-bind:src="item.imageUrl" class="card-img-top" alt="...">
   <div class="card-body">
     <h5 class="card-title">{{ item.item_name }}</h5>
     <p class="card-text">{{ item.description }}</p>
