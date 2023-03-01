@@ -48,9 +48,12 @@ import axios from 'axios';
 import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 import { useUserStore } from '../stores/userStore';
 import dayjs from 'dayjs';
+import { storage } from '../main';
+
 // import router from '../router';
 const userStore = useUserStore();
 const auth = getAuth()
+const storageRef = ref(storage);
 
 
 export default {
@@ -168,14 +171,13 @@ export default {
             console.log(error);
           })
     },
-
-
     formatDate(timestamp){
       console.log(timestamp)
       let date = new Date(timestamp._seconds * 1000)
       date = date.toDateString();
       return date;
-    }
+    },
+      
 
 
   }

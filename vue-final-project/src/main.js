@@ -13,6 +13,7 @@ import "bootstrap/dist/js/bootstrap.js"
 
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
+import { getStorage } from "firebase/storage";
 
 const firebaseConfig = {
     apiKey: "AIzaSyCDqf1KgJPE8CkHzL3quKcILcRo6Xo_8XM",
@@ -26,7 +27,8 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-let appp
+const storage = getStorage(app);
+
 
 
 // Initialize Firebase Authentication and get a reference to the service
@@ -62,4 +64,4 @@ const pinia = createPinia();
 // }
 
 createApp(App).use(pinia).use(router).use(VueAxios, axios).mount('#app')
-export { auth }
+export { auth, storage }

@@ -27,61 +27,6 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 ///////////////Item Routes///////////////
 
-// app.post("/create-item", upload, async(req,res)=>{
-
-//     upload(req, res, async (err) => {
-//         if (err) {
-//           console.log("error line 26 " + err);
-//           res.send({ msg: err });
-//           return;
-//         }
-
-
-//     try{
-
-        
-
-//     const file = req.file;
-//     const bucket = db.admin.storage().bucket();
-//     console.log("file: ", file);
-
-//     const imageBuffer = await sharp(file.path)
-//         .resize(250,250)
-//         .jpeg()
-//         .toBuffer()
-
-//     console.log("img: ",imageBuffer);
-        
-//     const storageFile = await bucket.upload(imageBuffer , {
-//         destination: `images/${uuidv4()}`,
-//         metadata: {
-//             contentType: file.mimetype,
-//         },
-//         });
-
-//     // Delete the file from the server
-//     fs.unlinkSync(file.path);
-
-//     const imageUrl = storageFile[0].metadata.mediaLink;
-
-//     const data = {
-//         item_name: req.body.item_name,
-//         item_type: req.body.item_type,
-//         description: req.body.description,
-//         status: req.body.status,
-//         imageUrl: imageUrl
-//     };
-
-//     console.log("Item data ", data);
-//     await db.Items.add(data);
-//     res.send({msg:"Item Added"});
-// }catch(error){
-//     console.log("error line 70 " + error)
-//     res.send({msg: "" + error});
-// }
-// }
-// });
-
 app.post("/create-item", authenticate, (req, res) => {
     upload(req, res, async (err) => {
       if (err) {
@@ -92,7 +37,7 @@ app.post("/create-item", authenticate, (req, res) => {
   
       try {
         const file = req.file;
-        const bucket = db.admin.storage().bucket();
+        // const bucket = db.admin.storage().bucket();
         console.log("file: ", file.path);
   
         const processImage = await sharp(file.path)
@@ -103,7 +48,7 @@ app.post("/create-item", authenticate, (req, res) => {
 
         const image = ('uploads/thumb_'+ file.originalname);
   
-        const storageFile = await bucket.upload(image, {
+        const storageFile = await db.bucket.upload(image, {
           destination: `images/${uuidv4()}`,
           metadata: {
             contentType: file.mimetype,
@@ -154,6 +99,7 @@ app.get("/item/all", authenticate, async(req,res)=>{
     } catch (error) {
         res.send({msg: "" + error })
     }
+
 });
 
 
