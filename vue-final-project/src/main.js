@@ -10,6 +10,9 @@ import router from './router'
 // import './assets/main.css'
 import "bootstrap/dist/js/bootstrap.js"
 
+import * as firebaseui from 'firebaseui'
+import 'firebaseui/dist/firebaseui.css'
+
 
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
@@ -64,4 +67,4 @@ const pinia = createPinia();
 // }
 
 createApp(App).use(pinia).use(router).use(VueAxios, axios).mount('#app')
-export { auth, storage }
+export { auth, storage, app, firebaseui }

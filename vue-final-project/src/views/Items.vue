@@ -74,14 +74,14 @@ export default {
   methods: {
 
     async getAllItems() {
-      console.log('token get all: ', userStore.authToken)
+    //  console.log('token get all: ', userStore.authToken)
       await axios.get('http://localhost:4000/item/all', {
         headers: {
           Authorization: `Bearer ${userStore.authToken}`
         }
       })
       .then(response => {
-        console.log(response.data)
+      //  console.log(response.data)
         this.items = response.data;
       })
       .catch(error => {
@@ -95,7 +95,7 @@ export default {
         }
   })
           .then(response =>{
-            console.log("res response: ",response.data)
+        //    console.log("res response: ",response.data)
             this.reservations = response.data;
           })
           .catch(error => {
@@ -110,7 +110,7 @@ export default {
         }
   })
           .then(response =>{
-            console.log("res response: ",response.data)
+        //    console.log("res response: ",response.data)
             this.transactions = response.data;
           })
           .catch(error => {
@@ -123,7 +123,7 @@ export default {
       this.reservedItem = item;
     },
     async reserveItem() {     
-    console.log(this.reservedItem.item_id);
+  //  console.log(this.reservedItem.item_id);
 
     const data = {
       
@@ -138,7 +138,7 @@ export default {
               }
         })
           .then(response =>{
-            console.log("res response: ", response.data);
+        //    console.log("res response: ", response.data);
             this.updateItemStatus();
           })
           .catch(error => {
@@ -146,7 +146,7 @@ export default {
           })
     },
         async updateItemStatus() {     
-    console.log(this.reservedItem.item_id);
+   // console.log(this.reservedItem.item_id);
     const data = {
       status: 'Reserved'
     }
@@ -158,7 +158,7 @@ export default {
               }
         })
           .then(response =>{
-            console.log("res response upadte item: ", response.data);
+          //  console.log("res response upadte item: ", response.data);
             // finds item by id and renders new status to view 
             // for(let i=0; i<this.items.length; i++) {
             //   if(this.items[i].item_id == this.reservedItem.item_id) {
@@ -172,7 +172,7 @@ export default {
           })
     },
     formatDate(timestamp){
-      console.log(timestamp)
+    //  console.log(timestamp)
       let date = new Date(timestamp._seconds * 1000)
       date = date.toDateString();
       return date;

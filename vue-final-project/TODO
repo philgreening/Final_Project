@@ -1,22 +1,23 @@
 userAdmin.vue
 * delete auth user
-* click user name and see loan/reservation items?
+* click user name and see loan/reservation items? done
 * stop delete if user has reservations/Loans
 
 
 Create myAccount.vue
-* Edit user details
-* See transactions, current loans & reservations
-* Cancel reservations
+* Edit user details done
+* See transactions, current loans & reservations done
+* Cancel reservations done
 
 Items
-* add and process images
+* add and process images done
 
 Create signup/in with google etc
 
 Add icons instead of buttons
 
 Secure API routes with auth middleware
+protect admin routes on Vue and hide options
 Tidy API into folders
 Open API documentation
 

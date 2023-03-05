@@ -30,7 +30,7 @@ actions:{
          user.getIdToken().then((idToken) => {
           this.authToken = idToken;
           this.user.id = user.uid;
-          console.log("on app.vue: ", this.user.id)
+       //   console.log("on app.vue: ", this.user.id)
           //this.getUser();
 
 
@@ -40,15 +40,15 @@ actions:{
                 }
             })
                 .then(response => {
-                    setTimeout(() =>{
-                    console.log("Get User res response: ", response.data)
+                    // setTimeout(() =>{
+                //    console.log("Get User res response: ", response.data)
                     // this.users = response.data;
                     this.user.first_name = response.data.first_name;
                     this.user.last_name = response.data.last_name;
                     this.user.admin = response.data.admin;
                     this.user.name = this.user.first_name + " " + this.user.last_name;
-                    console.log("getUser store", this.user.name);
-                },500);
+                  //  console.log("getUser store", this.user.name);
+                // },500);
                 })
                 .catch(error => {
                     console.log(error);

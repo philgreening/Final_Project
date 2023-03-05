@@ -113,7 +113,6 @@ import { storeToRefs } from 'pinia';
 const userStore = useUserStore();
 const isLoggedIn = ref(false);
 const username = ref()
-username.value = userStore.user.name
 
 
 
@@ -123,12 +122,13 @@ onMounted(() => {
   onAuthStateChanged(auth, (user) => {
     if (user) {
       isLoggedIn.value = true;
+     // console.log("header dropdown: ", username)
 
-      //Sets username on user account dropdown
-//       setTimeout(() =>{
-//       
-//       console.log("username",username.value);
-//  }, 500)
+      // Sets username on user account dropdown
+      setTimeout(() =>{
+      username.value = userStore.user.name
+    //  console.log("username",username.value);
+ }, 500)
     } else {
       isLoggedIn.value = false;
       username.value = null;

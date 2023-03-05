@@ -67,6 +67,12 @@ const router = createRouter({
       name: 'user-details',
       component: () => import('../views/UserDetails.vue')
     },
+    {
+      path: '/register-google',
+      name: 'register-google',
+      component: () => import('../views/RegisterGoogle.vue')
+    },
+
 
   ]
 })

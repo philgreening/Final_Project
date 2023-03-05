@@ -58,7 +58,10 @@
                             <div class="text-center my-2">
                                 <p class="h3">Edit Item</p>
                             </div>
-                            <div class="input-group mb-3">
+                            <div class="alignitems-center">
+                                <img :src="editItem.imageUrl" class="img-thumbnail mx-auto d-block">
+                            </div>
+                            <div class="input-group my-3 ">
                                 <div class="input-group-prepend">
                                     <span class="input-group-text" id="item-name">Item Name</span>
                                 </div>
@@ -83,11 +86,11 @@
                                 <div class="input-group-prepend">
                                     <span class="input-group-text" id="profileimage">Profile Image </span>
                                 </div>
-                                <input type="file" class="form-control" @change="onFileUpload">
+                                <input type="file" class="form-control" @change="onFileSelected">
                             </div>
                             <!-- display error messages -->
                             <div class="alert alert-danger mb-3" role="alert" v-if="errors.length">
-                                <p class="text-center" v-for="error in errors" v-bind:key="error">
+                                <p class="text-center" v-for="error in errors" :key="error">
                                     {{ error }}
                                 </p>
                             </div>
@@ -156,7 +159,7 @@
                             </div>
                             <!-- display error messages -->
                             <div class="alert alert-danger mb-3" role="alert" v-if="errors.length">
-                                <p class="text-center" v-for="error in errors" v-bind:key="error">
+                                <p class="text-center" v-for="error in errors" :key="error">
                                     {{ error }}
                                 </p>
                             </div>
@@ -225,7 +228,7 @@ export default {
             },
             success: "",
             selectedFile: null,
-            imageUrl: null
+            // imageUrl: null
         };
     },
     mounted() {
@@ -265,11 +268,19 @@ export default {
             }
             // If no errors, then submit form data
             if (!this.errors.length) {
-                const formData = {
-                    item_name: this.editItem.item_name,
-                    item_type: this.editItem.item_type,
-                    description: this.editItem.description,
-                };
+                let formData = new FormData();
+                formData.append('item_name',this.editItem.item_name);
+                formData.append('item_type',this.editItem.item_type);
+                formData.append('description', this.editItem.description);
+                formData.append('status', "Available");
+                formData.append('image', this.selectedFile);
+                
+
+                // const formData = {
+                //     item_name: this.editItem.item_name,
+                //     item_type: this.editItem.item_type,
+                //     description: this.editItem.description,
+                // };
 
                 await axios
                     .patch(
@@ -334,8 +345,8 @@ export default {
                     .then((response) => {
                         console.log("Item created: ", response.data);
                         this.success = "Item added";
-                        this.imageUrl = response.data.imageUrl;
-                        console.log(this.imageUrl);
+                        // this.imageUrl = response.data.imageUrl;
+                        // console.log(this.imageUrl);
                     })
                     .catch((error) => {
                         console.log(error);

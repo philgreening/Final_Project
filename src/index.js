@@ -115,25 +115,79 @@ app.get("/item/:id", async(req,res)=>{
     }
 });
 
-app.patch("/update-item/:id", async(req,res)=>{
-    try {
-        const itemRef = db.Items.doc(req.params.id);
+// app.patch("/update-item/:id", async(req,res)=>{
+//     try {
+//         const itemRef = db.Items.doc(req.params.id);
 
-        const data = {
-            item_name: req.body.item_name,
-            item_type: req.body.item_type,
-            description: req.body.description,
-            status: req.body.status
-        };
+//         const data = {
+//             item_name: req.body.item_name,
+//             item_type: req.body.item_type,
+//             description: req.body.description,
+//             status: req.body.status
+//         };
 
-        await itemRef.update(data);
+//         await itemRef.update(data);
     
-        console.dir(req.body);
-        res.send({msg: "Item updated" }); 
-    } catch (error) {
-        res.send({msg: "" + error })
-    }
-});
+//         console.dir(req.body);
+//         res.send({msg: "Item updated" }); 
+//     } catch (error) {
+//         res.send({msg: "" + error })
+//     }
+// });
+
+app.patch("/update-item/:id", authenticate, async(req, res) => {
+    upload(req, res, async (err) => {
+      if (err) {
+        console.log("error line 141 " + err);
+        res.send({ msg: err });
+        return;
+      }
+  
+      try {
+        const itemRef = db.Items.doc(req.params.id);
+        const file = req.file;
+        // const bucket = db.admin.storage().bucket();
+        console.log("file: ", file.path);
+  
+        const processImage = await sharp(file.path)
+          .resize(250, 250)
+          .jpeg()
+          .toFile('uploads/thumb_'+ file.originalname)
+        //   .toBuffer();
+
+        const image = ('uploads/thumb_'+ file.originalname);
+  
+        const storageFile = await db.bucket.upload(image, {
+          destination: `images/${uuidv4()}`,
+          metadata: {
+            contentType: file.mimetype,
+          },
+        });
+  
+        // Delete the files from the server
+        fs.unlinkSync(file.path);
+        fs.unlinkSync(image);
+  
+        const imageUrl = storageFile[0].metadata.mediaLink;
+  
+        const data = {
+          item_name: req.body.item_name,
+          item_type: req.body.item_type,
+          description: req.body.description,
+          status: req.body.status,
+          imageUrl: imageUrl,
+        };
+  
+        console.log("Item data ", data);
+        // await db.Items.add(data);
+        await itemRef.update(data);
+        res.send({ msg: "Item updated" });
+      } catch (error) {
+        console.log("error line 186 " + error);
+        res.send({ msg: "" + error });
+      }
+    });
+  });
 
 app.delete("/delete-item/:id", async(req,res)=>{
     try {

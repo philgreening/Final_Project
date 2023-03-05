@@ -3,16 +3,6 @@
     <p class="h3 p-2">Sign Up</p>
     <!-- </div> -->
     <form @submit.prevent="submitForm" class="needs-validation" novalidate>
-      <!-- Password input -->
-      <div class="input-group mb-3 has-validation">
-        <div class="input-group-prepend">
-          <span class="input-group-text">Password</span>
-        </div>
-        <input type="text" class="form-control" placeholder="Choose a password" v-model.lazy="password" required />
-        <div class="invalid-feedback">
-          Password must be at least 6 characters.
-        </div>
-      </div>
       <!-- Email input -->
       <div class="input-group mb-3 has-validation">
         <div class="input-group-prepend">
@@ -56,21 +46,13 @@
 
 <script setup>
 import { ref, onMounted } from "vue";
-import {
-  getAuth,
-  createUserWithEmailAndPassword,
-  GoogleAuthProvider,
-  signInWithPopup,
-} from "firebase/auth";
 import { useRouter } from "vue-router";
 import axios, { Axios } from "axios";
 import { auth } from "../main";
+import { useUserStore } from "../stores/userStore";
+import { updateEmail } from "firebase/auth";
 
-const provider = new GoogleAuthProvider();
-
-provider.setCustomParameters({
-  prompt: "select_account",
-});
+const userStore = useUserStore();
 
 const router = useRouter();
 const email = ref("");
@@ -80,18 +62,39 @@ const firstName = ref("");
 const lastName = ref("");
 // const success = ref([]);
 
-//     onMounted(()=>{
-//   // Render the Google sign-in button
-//   gapi.signin2.render("google-sign-in", {
-//     scope: "email",
-//     width: 240,
-//     height: 50,
-//     longtitle: true,
-//     theme: "light",
-//     onsuccess: registerWithGoogle,
-//     onfailure: onError
-//   });
-// });
+const user = ref([]);
+const currentUserId = ref("")
+
+    onMounted(()=>{
+      currentUserId.value = userStore.user.id;
+      console.log(currentUserId.value)
+      getUser();
+
+});
+
+
+const getUser =  async() => {
+            await axios
+                .get("http://localhost:4000/User/" + currentUserId.value, {
+                    headers: {
+                        Authorization: `Bearer ${userStore.authToken}`,
+                    },
+                })
+                .then((response) => {
+                    console.log("res response: ", response.data);
+                    user.value = response.data;
+                    console.log(user.value);
+                    firstName.value = user.value.first_name;
+                    lastName.value = user.value.last_name;
+                    email.value = user.value.email;
+
+                    console.log(firstName.value);
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+              }
+
 
 // Handle form submission
 const submitForm = (event) => {
@@ -107,61 +110,48 @@ const submitForm = (event) => {
       event.stopPropagation();
       console.log("called");
     } else {
-      register();
+      updateUser();
       // this.success = "Details updated";
     }
     form.classList.add("was-validated");
   });
 };
+        // Update user data via API
+        const updateUser = async() => {
+            // Update user email in Firebase Auth
+            console.log(currentUserId);
+            updateEmail(auth.currentUser, email.value)
+                .then(() => {
+                    console.log("Auth email updated: ");
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+            // Define form data object with user's details
+            const formData = {
+                first_name: firstName.value,
+                last_name: lastName.value,
+                email: email.value,
+                address: address.value,
+            };
+            // Send a patch request via API to update user's details
+            await axios
+                .patch(
+                    "http://localhost:4000/update-user/" + currentUserId.value,
+                    formData,
+                    {
+                        headers: {
+                            Authorization: `Bearer ${userStore.authToken}`,
+                        },
+                    }
+                )
+                .then((response) => {
+                    console.log("res response upadte item: ", response.data);
+                    router.push("/items");
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+        }
 
-const register = () => {
-  createUserWithEmailAndPassword(auth, email.value, password.value)
-    .then((data) => {
-      console.log("Succesfully registered!");
-      console.log(data.user.uid);
-      const uid = data.user.uid;
-      const userEmail = data.user.email;
-
-      const formData = {
-        id: uid,
-        first_name: firstName.value,
-        last_name: lastName.value,
-        address: address.value,
-        email: userEmail,
-      };
-
-      axios.post("http://localhost:4000/create-user", formData);
-
-      router.push("/items");
-    })
-    .catch((error) => {
-      console.log(error.code);
-      alert(error.message);
-    });
-};
-
-const registerWithGoogle = () => {
-  signInWithPopup(auth, provider)
-    .then((result) => {
-      // credentialFromResult(result);
-      const user = result.user;
-      console.log(user);
-      // myModal.show();
-      console.log("sign in result: ", result);
-      // router.push('/items');
-    })
-    .catch((error) => {
-      console.log(error);
-    });
-};
-
-const onError = () => {
-  alert("Error occurred while signing in with Google.");
-};
 </script>
-
-<style scoped>
-#google-sign-in {
-  margin: auto;
-}
-</style>
