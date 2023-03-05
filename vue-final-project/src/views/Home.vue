@@ -1,20 +1,22 @@
 <template>
-  <div class="container-fluid" v-for="item in items" v-bind:key="item">
-    <div class="card m-5" style="width: 18rem;">
-  <img v-bind:src=items.imageURL class="card-img-top" alt="...">
-  <div class="card-body">
-    <h5 class="card-title">{{ item.item_name }}</h5>
-    <p class="card-text">{{ item.description }}</p>
-  </div>
-</div>
+  <div class="container p-4">
+    <div class="row">
+      <div class="col-md-4" v-for="item in randomItems" v-bind:key="item">
+        <div class="card m-4 shadow">
+          <img v-bind:src="item.imageUrl" class="card-img-top" alt="...">
+          <div class="card-body">
+            <h5 class="card-title">{{ item.item_name }}</h5>
+            <p class="card-text">{{ item.description }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
-// import { onMounted, ref } from 'vue';
+
 import axios from 'axios';
-import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
-// import router from '../router';
 
 export default {
   name: 'Home',
@@ -23,108 +25,33 @@ export default {
       items: []
     }
   },
-//   mounted() {
-//     const auth = getAuth();
-
-//      onAuthStateChanged(auth,(user) => {
-//   if (user) {
-//     // User is signed in.
-//      user.getIdToken().then((idToken) => {
-//       console.log(idToken)
-//       // Include the token as an Authorization header in your GET request:
-//       axios.get('http://localhost:4000/item/all', {
-//         headers: {
-//           Authorization: `Bearer ${idToken}`
-//         }
-//       })
-//       .then(response => {
-//         console.log(response.data)
-//         this.items = response.data;
-//       })
-//       .catch(error => {
-//         console.error(error)
-//       })
-//     })
-//   } else {
-//     // No user is signed in.
-//     console.log("no user signed in")
-//   }
-// })
-
-//   }
-
+  mounted(){
+    this.getAllItems();
+  },
+  methods:{
+    async getAllItems() {
+      await axios.get('http://localhost:4000/item/all', {
+      })
+      .then(response => {
+        this.items = response.data;
+        console.log(this.items);
+      })
+      .catch(error => {
+        console.log(error)
+      })
+    },
+    shuffleArray(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+      return array;
+    },
+  },
+  computed: {
+    randomItems() {
+      return this.shuffleArray(this.items).slice(0, 3);
+    }
+  }
 }
-
-
-// const isLoggedIn = ref(false);
-//  const auth = getAuth()
-
-// onMounted(() =>{
-//     onAuthStateChanged(auth, (user)=> {
-//         if (user) {
-//             isLoggedIn.value = true;
-//         }else{
-//             isLoggedIn.value = false;
-//         }
-//         })
-//     });
-
-// const handleSignOut = () => {
-//     signOut(auth).then(()=> {
-//         router.push("/");
-
-//     });
-// };
-
-//   auth.onAuthStateChanged((user) => {
-//   if (user) {
-//     // User is signed in.
-//      user.getIdToken().then((idToken) => {
-//       console.log(idToken)
-//       // Include the token as an Authorization header in your GET request:
-//       axios.get('http://localhost:4000/item/all', {
-//         headers: {
-//           Authorization: `Bearer ${idToken}`
-//         }
-//       })
-//       .then(response => {
-//         console.log(response.data)
-//         this.items = response.data;
-//       })
-//       .catch(error => {
-//         console.error(error)
-//       })
-//     })
-//   } else {
-//     // No user is signed in.
-//     console.log("no user signed in")
-//   }
-// })
-
-
-// export default {
-//     data() {
-//     return {
-//       data: ""
-//     };
-//   }
- 
-//     auth.currentUser.getIdToken().then(token => {
-//         console.log(token);
-//      axios.get('http://localhost:4000/item/all', {
-//         headers: {
-//             'Authorization' : `Bearer ${token}`
-//         }
-//     })
-//         .then(response => {
-//           console.log(response)
-//           this.data = response;
-//         })
-//         .catch(error => {
-//           console.log(JSON.stringify(error))
-//         })
-//   })
-
-
-// }
 </script>

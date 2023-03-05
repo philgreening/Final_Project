@@ -106,7 +106,7 @@ export default {
             user: [],
             currentUserId: userStore.user.id,
             username: userStore.user.name,
-            success:''
+            success: "",
         };
     },
     mounted() {
@@ -186,9 +186,9 @@ export default {
                 });
         },
         clearAlerts() {
-            this.success = '';
+            this.success = "";
             this.getUser();
-        }
+        },
     },
 };
 </script>

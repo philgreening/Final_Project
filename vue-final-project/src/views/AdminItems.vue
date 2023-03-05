@@ -58,7 +58,7 @@
                             <div class="text-center my-2">
                                 <p class="h3">Edit Item</p>
                             </div>
-                            <div class="alignitems-center">
+                            <div v-if="editItem.imageUrl" class="alignitems-center">
                                 <img :src="editItem.imageUrl" class="img-thumbnail mx-auto d-block">
                             </div>
                             <div class="input-group my-3 ">

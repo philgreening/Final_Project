@@ -79,7 +79,7 @@ app.post("/create-item", authenticate, (req, res) => {
     });
   });
 
-app.get("/item/all", authenticate, async(req,res)=>{
+app.get("/item/all", async(req,res)=>{
     try {
         const response = await db.Items.get();
         let itemArray = [];
@@ -103,7 +103,7 @@ app.get("/item/all", authenticate, async(req,res)=>{
 });
 
 
-app.get("/item/:id", async(req,res)=>{
+app.get("/item/:id", authenticate, async(req,res)=>{
     try {
         const itemRef = db.Items.doc(req.params.id);
         const response = await itemRef.get();
@@ -144,7 +144,11 @@ app.patch("/update-item/:id", authenticate, async(req, res) => {
       }
   
       try {
+
+        let data = [];
         const itemRef = db.Items.doc(req.params.id);
+
+        if(req.file){
         const file = req.file;
         // const bucket = db.admin.storage().bucket();
         console.log("file: ", file.path);
@@ -170,13 +174,21 @@ app.patch("/update-item/:id", authenticate, async(req, res) => {
   
         const imageUrl = storageFile[0].metadata.mediaLink;
   
-        const data = {
+         data = {
           item_name: req.body.item_name,
           item_type: req.body.item_type,
           description: req.body.description,
           status: req.body.status,
           imageUrl: imageUrl,
         };
+    } else {
+        data = {
+            item_name: req.body.item_name,
+            item_type: req.body.item_type,
+            description: req.body.description,
+            status: req.body.status,
+          };
+    }
   
         console.log("Item data ", data);
         // await db.Items.add(data);
@@ -189,7 +201,7 @@ app.patch("/update-item/:id", authenticate, async(req, res) => {
     });
   });
 
-app.delete("/delete-item/:id", async(req,res)=>{
+app.delete("/delete-item/:id", authenticate, async(req,res)=>{
     try {
         const itemRef = db.Items.doc(req.params.id);
         await itemRef.delete();
@@ -203,7 +215,7 @@ app.delete("/delete-item/:id", async(req,res)=>{
 
 ///////////////User Routes///////////////
 
-app.post("/create-user", async(req,res)=>{
+app.post("/create-user", authenticate, async(req,res)=>{
     try{
     const data = {
         first_name: req.body.first_name,
@@ -222,7 +234,7 @@ app.post("/create-user", async(req,res)=>{
 }
 });
 
-app.get("/User/all", async(req,res)=>{
+app.get("/User/all", authenticate, async(req,res)=>{
     try {
         const response = await db.Users.get();
         let userArray = [];
@@ -245,7 +257,7 @@ app.get("/User/all", async(req,res)=>{
     }
 });
 
-app.get("/User/:id", async(req,res)=>{
+app.get("/User/:id", authenticate, async(req,res)=>{
     try {
         const userRef = db.Users.doc(req.params.id);
         const response = await userRef.get();
@@ -257,7 +269,7 @@ app.get("/User/:id", async(req,res)=>{
     }
 });
 
-app.patch("/update-user/:id", async(req,res)=>{
+app.patch("/update-user/:id", authenticate, async(req,res)=>{
     try {
         const userRef = db.Users.doc(req.params.id);
 
@@ -278,7 +290,7 @@ app.patch("/update-user/:id", async(req,res)=>{
     }
 });
 
-app.delete("/delete-user/:id", async(req,res)=>{
+app.delete("/delete-user/:id", authenticate, async(req,res)=>{
     try {
         const userRef = db.Users.doc(req.params.id);
         await userRef.delete();
@@ -292,7 +304,7 @@ app.delete("/delete-user/:id", async(req,res)=>{
 
 ///////////////Reservation Routes///////////////
 
-app.post("/create-reservation", async(req,res)=>{
+app.post("/create-reservation", authenticate, async(req,res)=>{
     try{
     const data = {
         item_id: req.body.item_id,
@@ -331,7 +343,7 @@ app.get("/Reservation/all", authenticate, async(req,res)=>{
     }
 });
 
-app.get("/Reservation/:id", async(req,res)=>{
+app.get("/Reservation/:id", authenticate, async(req,res)=>{
     try {
         const resRef = db.Reservations.doc(req.params.id);
         const response = await resRef.get();
@@ -343,7 +355,7 @@ app.get("/Reservation/:id", async(req,res)=>{
     }
 });
 
-app.delete("/delete-reservation/:id", async(req,res)=>{
+app.delete("/delete-reservation/:id", authenticate, async(req,res)=>{
     try {
         const resRef = db.Reservations.doc(req.params.id);
         await resRef.delete();
@@ -358,7 +370,7 @@ app.delete("/delete-reservation/:id", async(req,res)=>{
 
 ///////////////Transaction Routes///////////////
 
-app.post("/create-transaction", async(req,res)=>{
+app.post("/create-transaction", authenticate, async(req,res)=>{
     try{
     const data = {
         item_id: req.body.item_id,
@@ -404,7 +416,7 @@ app.get("/Transaction/all", authenticate, async(req,res)=>{
     }
 });
 
-app.get("/Transaction/:id", async(req,res)=>{
+app.get("/Transaction/:id", authenticate, async(req,res)=>{
     try {
         const transactionRef = db.Transactions.doc(req.params.id);
         const response = await transactionRef.get();
@@ -417,7 +429,7 @@ app.get("/Transaction/:id", async(req,res)=>{
 });
 
 
-app.patch("/update-transaction/:id", async(req,res)=>{
+app.patch("/update-transaction/:id", authenticate, async(req,res)=>{
     try {
         const transactionRef = db.Transactions.doc(req.params.id);
 
