@@ -17,7 +17,8 @@ Create signup/in with google etc done
 Add icons instead of buttons
 
 Secure API routes with auth middleware done
-protect admin routes on Vue and hide options
+protect admin routes on Vue and hide options done
 Tidy API into folders
 Open API documentation
+add search bar
 

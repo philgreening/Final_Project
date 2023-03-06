@@ -12,11 +12,15 @@
                 <template v-if="
                   item.item_id === transaction.item_id &&
                   transaction.transaction_status === 'On Loan'">
+                  <span class="badge rounded-pill bg-danger">On Loan</span>
                   <p class="card-text">
                     Due date: {{ formatDate(transaction.due_date) }}
                   </p>
                 </template>
               </template>
+            </template>
+            <template v-if="item.status == 'Reserved'">
+              <span class="badge rounded-pill bg-warning text-dark">Reserved</span>
             </template>
             <template v-if="item.status == 'Available'">
               <button type="button" @click="getIndex(item)" class="btn btn-primary" data-bs-toggle="modal"
@@ -29,12 +33,12 @@
       </div>
     </div>
   </div>
-
+<!-- Reservation Modal -->
   <div class="modal fade" id="resModal" tabindex="-1" aria-labelledby="resModalLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="resModalLabel">{{ reservedItem.name }}</h5>
+          <h5 class="modal-title" id="resModalLabel">Place reservation?</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">

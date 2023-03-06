@@ -20,14 +20,15 @@
                     <td>{{ item.item_name }}</td>
                     <td>{{ item.item_type }}</td>
                     <td>{{ item.description }}</td>
-                    <td>{{ item.status }}</td>
+                    <template v-if="item.status == 'On Loan'">
+                        <td class="text-danger">{{ item.status }}</td>
+                    </template>
+                    <td v-else>{{ item.status }}</td>
                     <td>
-                        <!-- <template v-if="transaction.transaction_status === 'On Loan'"> -->
                         <button type="button" @click="getIndex(item)" class="btn btn-warning" data-bs-toggle="modal"
                             data-bs-target="#editItemModal">
                             Edit Item
                         </button>
-                        <!-- </template> -->
                     </td>
                     <td>
                         <button v-if="item.status === 'Available'" type="button" @click="getIndex(item)"
@@ -45,7 +46,7 @@
     </div>
     <!-- Edit Item modal -->
     <div class="modal fade" id="editItemModal" tabindex="-1" aria-labelledby="editItemModalLabel" aria-hidden="true">
-        <form @submit.prevent="updateItem">
+        <form @submit.prevent="submitForm" class="needs-validation" data-form-type="update" novalidate>
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -59,55 +60,58 @@
                                 <p class="h3">Edit Item</p>
                             </div>
                             <div v-if="editItem.imageUrl" class="alignitems-center">
-                                <img :src="editItem.imageUrl" class="img-thumbnail mx-auto d-block">
+                                <img :src="editItem.imageUrl" :key="editItem.imageUrl"
+                                    class="img-thumbnail mx-auto d-block" />
                             </div>
-                            <div class="input-group my-3 ">
+
+                            <div class="input-group mb-3 has-validation">
                                 <div class="input-group-prepend">
-                                    <span class="input-group-text" id="item-name">Item Name</span>
+                                    <span class="input-group-text">Item Name</span>
                                 </div>
                                 <input type="text" class="form-control" placeholder="Item Name"
-                                    v-model.lazy="editItem.item_name" />
+                                    v-model.lazy="editItem.item_name" required />
+                                <div class="invalid-feedback">Please input an item name.</div>
                             </div>
-                            <div class="input-group mb-3">
+                            <div class="input-group mb-3 has-validation">
                                 <div class="input-group-prepend">
-                                    <span class="input-group-text" id="item-type">Item Type</span>
+                                    <span class="input-group-text">Item Type</span>
                                 </div>
-                                <input type="text" class="form-control" placeholder="Item Type"
-                                    v-model.lazy="editItem.item_type" />
+                                <select class="form-select" aria-label="Default select example"
+                                    v-model.lazy="editItem.item_type" required>
+                                    <option selected></option>
+                                    <option value="DIY">DIY</option>
+                                    <option value="Board Game">Board Game</option>
+                                    <option value="Technology">Technology</option>
+                                    <option value="Cleaning">Cleaning</option>
+                                    <option value="Cooking">Cooking</option>
+                                    <option value="Gardening">Gardening</option>
+                                </select>
+                                <div class="invalid-feedback">Please choose an item type.</div>
                             </div>
-                            <div class="input-group mb-3">
+                            <div class="input-group mb-3 has-validation">
                                 <div class="input-group-prepend">
-                                    <span class="input-group-text h-100" id="desc">Description</span>
+                                    <span class="input-group-text h-100">Description</span>
                                 </div>
-                                <textarea class="form-control" placeholder="Describe the item..."
-                                    v-model.lazy="editItem.description"></textarea>
+                                <textarea type="text-area" class="form-control" placeholder="Item Description"
+                                    v-model.lazy="editItem.description" required></textarea>
+                                <div class="invalid-feedback">Please describe your item.</div>
                             </div>
-                            <div class="input-group mb-3">
+                            <div class="input-group mb-3 has-validation">
                                 <div class="input-group-prepend">
-                                    <span class="input-group-text" id="profileimage">Profile Image </span>
+                                    <span class="input-group-text" id="itemimage">Item image</span>
                                 </div>
-                                <input type="file" class="form-control" @change="onFileSelected">
-                            </div>
-                            <!-- display error messages -->
-                            <div class="alert alert-danger mb-3" role="alert" v-if="errors.length">
-                                <p class="text-center" v-for="error in errors" :key="error">
-                                    {{ error }}
-                                </p>
+                                <input type="file" class="form-control" @change="onFileSelected" />
                             </div>
                             <!-- display success message -->
                             <div class="alert alert-success mb-3" role="alert" v-if="success.length">
                                 <p class="text-center">{{ success }}</p>
                             </div>
-                            <!-- <button type="submit" class="btn btn-primary pull-left">Submit</button> -->
-                            <!-- </div> -->
-                            <!-- </div> -->
                         </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" @click="clearAlerts()" class="btn btn-secondary" data-bs-dismiss="modal">
                             Close
                         </button>
-                        <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
                         <button type="submit" class="btn btn-primary">Save changes</button>
                     </div>
                 </div>
@@ -116,7 +120,7 @@
     </div>
     <!-- Add item modal -->
     <div class="modal fade" id="addItemModal" tabindex="-1" aria-labelledby="addItemModalLabel" aria-hidden="true">
-        <form @submit.prevent="addItem">
+        <form @submit.prevent="submitForm" class="needs-validation" data-form-type="add" novalidate>
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -129,54 +133,58 @@
                             <div class="text-center my-2">
                                 <p class="h3">Add Item</p>
                             </div>
-                            <div class="input-group mb-3">
+
+                            <div class="input-group mb-3 has-validation">
                                 <div class="input-group-prepend">
-                                    <span class="input-group-text" id="item-name">Item name</span>
+                                    <span class="input-group-text">Item Name</span>
                                 </div>
                                 <input type="text" class="form-control" placeholder="Item Name"
-                                    v-model="createItem.item_name" />
+                                    v-model="createItem.item_name" required />
+                                <div class="invalid-feedback">Please input an item name.</div>
                             </div>
-                            <div class="input-group mb-3">
+                            <div class="input-group mb-3 has-validation">
                                 <div class="input-group-prepend">
-                                    <span class="input-group-text" id="item-type">Item type</span>
+                                    <span class="input-group-text">Item Type</span>
                                 </div>
-                                <input type="text" class="form-control" placeholder="Item Type"
-                                    v-model="createItem.item_type" />
+
+                                <select class="form-select" aria-label="Default select example"
+                                    v-model="createItem.item_type" required>
+                                    <option selected></option>
+                                    <option value="DIY">DIY</option>
+                                    <option value="Board Game">Board Game</option>
+                                    <option value="Technology">Technology</option>
+                                    <option value="Cleaning">Cleaning</option>
+                                    <option value="Cooking">Cooking</option>
+                                    <option value="Gardening">Gardening</option>
+                                </select>
+                                <div class="invalid-feedback">Please choose an item type.</div>
                             </div>
-                            <div class="input-group mb-3">
+                            <div class="input-group mb-3 has-validation">
                                 <div class="input-group-prepend">
-                                    <span class="input-group-text h-100" id="desc">Description</span>
+                                    <span class="input-group-text h-100">Description</span>
                                 </div>
-                                <textarea class="form-control" placeholder="Describe the item..."
-                                    v-model="createItem.description"></textarea>
+                                <textarea type="text-area" class="form-control" placeholder="Item Description"
+                                    v-model="createItem.description" required></textarea>
+                                <div class="invalid-feedback">Please describe your item.</div>
                             </div>
-                            <div class="input-group mb-3">
+                            <div class="input-group mb-3 has-validation">
                                 <div class="input-group-prepend">
-                                    <span class="input-group-text" id="itemimage">Item image
-                                    </span>
+                                    <span class="input-group-text" id="itemimage">Item image</span>
                                 </div>
-                                <input type="file" class="form-control" @change="onFileSelected" />
+                                <input type="file" class="form-control" @change="onFileSelected" required />
+                                <div class="invalid-feedback">Please choose a photo.</div>
                             </div>
-                            <!-- display error messages -->
-                            <div class="alert alert-danger mb-3" role="alert" v-if="errors.length">
-                                <p class="text-center" v-for="error in errors" :key="error">
-                                    {{ error }}
-                                </p>
-                            </div>
+
                             <!-- display success message -->
                             <div class="alert alert-success mb-3" role="alert" v-if="success.length">
                                 <p class="text-center">{{ success }}</p>
                             </div>
-                            <!-- <button type="submit" class="btn btn-primary pull-left">Submit</button> -->
-                            <!-- </div> -->
-                            <!-- </div> -->
                         </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" @click="clearAlerts()" class="btn btn-secondary" data-bs-dismiss="modal">
                             Close
                         </button>
-                        <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
                         <button type="submit" class="btn btn-primary">Save changes</button>
                     </div>
                 </div>
@@ -198,7 +206,6 @@
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
                         No
                     </button>
-                    <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
                     <button type="button" class="btn btn-primary" @click="deleteItem()" data-bs-dismiss="modal">
                         Yes
                     </button>
@@ -209,7 +216,6 @@
 </template>
 
 <script>
-import { onMounted, reactive, ref } from "vue";
 import { useUserStore } from "../stores/userStore";
 import axios from "axios";
 
@@ -228,7 +234,6 @@ export default {
             },
             success: "",
             selectedFile: null,
-            // imageUrl: null
         };
     },
     mounted() {
@@ -252,106 +257,60 @@ export default {
                 });
         },
         async updateItem() {
-            // reset alert messages
-            this.errors = [];
             this.success = "";
 
-            // Conditions for error handling
-            if (this.editItem.item_name === "") {
-                this.errors.push("Please enter an item name");
+            let formData = new FormData();
+            formData.append("item_name", this.editItem.item_name);
+            formData.append("item_type", this.editItem.item_type);
+            formData.append("description", this.editItem.description);
+            formData.append("status", "Available");
+            if (this.selectedFile) {
+                formData.append("image", this.selectedFile);
             }
-            if (this.editItem.item_type === "") {
-                this.errors.push("Please enter an item type");
-            }
-            if (this.editItem.description === "") {
-                this.errors.push("Please describe your item");
-            }
-            // If no errors, then submit form data
-            if (!this.errors.length) {
-                let formData = new FormData();
-                formData.append('item_name',this.editItem.item_name);
-                formData.append('item_type',this.editItem.item_type);
-                formData.append('description', this.editItem.description);
-                formData.append('status', "Available");
-                formData.append('image', this.selectedFile);
-                
 
-                // const formData = {
-                //     item_name: this.editItem.item_name,
-                //     item_type: this.editItem.item_type,
-                //     description: this.editItem.description,
-                // };
-
-                await axios
-                    .patch(
-                        "http://localhost:4000/update-item/" + this.editItem.item_id,
-                        formData,
-                        {
-                            headers: {
-                                Authorization: `Bearer ${userStore.authToken}`,
-                            },
-                        }
-                    )
-                    .then((response) => {
-                        console.log("res response upadte item: ", response.data);
-                        this.success = "Item updated";
-                    })
-                    .catch((error) => {
-                        console.log(error);
-                    });
-            }
-        },
-        async addItem() {
-            // reset alert messages
-            this.errors = [];
-            this.success = "";
-
-            // Conditions for error handling
-            if (this.createItem.item_name === "") {
-                this.errors.push("Please enter an item name");
-            }
-            if (this.createItem.item_type === "") {
-                this.errors.push("Please enter an item type");
-            }
-            if (this.createItem.description === "") {
-                this.errors.push("Please describe your item");
-            }
-            // If no errors, then submit form data
-            if (!this.errors.length) {
-
-                let formData = new FormData();
-                formData.append('item_name',this.createItem.item_name);
-                formData.append('item_type',this.createItem.item_type);
-                formData.append('description', this.createItem.description);
-                formData.append('status', "Available");
-                formData.append('image', this.selectedFile);
-                
-
-
-                // const formData = {
-                //     item_name: this.createItem.item_name,
-                //     item_type: this.createItem.item_type,
-                //     description: this.createItem.description,
-                //     status: "Available",
-                // };
-                //Call api and send formData to create item
-                await axios
-                    .post("http://localhost:4000/create-item/", formData, {
+            await axios
+                .patch(
+                    "http://localhost:4000/update-item/" + this.editItem.item_id,
+                    formData,
+                    {
                         headers: {
                             Authorization: `Bearer ${userStore.authToken}`,
-                            "Content-Type": "multipart/form-data"
                         },
-                    })
-                    .then((response) => {
-                        console.log("Item created: ", response.data);
-                        this.success = "Item added";
-                        // this.imageUrl = response.data.imageUrl;
-                        // console.log(this.imageUrl);
-                    })
-                    .catch((error) => {
-                        console.log(error);
-                    });
-            }
+                    }
+                )
+                .then((response) => {
+                    console.log("res response upadte item: ", response.data);
+                    this.success = "Item updated";
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+            // }
+        },
+        async addItem() {
+            let formData = new FormData();
+            formData.append("item_name", this.createItem.item_name);
+            formData.append("item_type", this.createItem.item_type);
+            formData.append("description", this.createItem.description);
+            formData.append("status", "Available");
+            formData.append("image", this.selectedFile);
+
+            //Call api and send formData to create item
+            await axios
+                .post("http://localhost:4000/create-item/", formData, {
+                    headers: {
+                        Authorization: `Bearer ${userStore.authToken}`,
+                        "Content-Type": "multipart/form-data",
+                    },
+                })
+                .then((response) => {
+                    console.log("Item created: ", response.data);
+                    this.success = "Item added";
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+            // }
         },
         async deleteItem() {
             await axios
@@ -373,13 +332,38 @@ export default {
             console.log(this.editItem);
         },
         clearAlerts() {
-            this.errors = [];
             this.success = "";
+            this.createItem.item_name = "";
+            this.createItem.item_type = "";
+            this.createItem.description = "";
+            this.selectedFile = null;
             this.getAllItems();
         },
-        onFileSelected(event){
+        onFileSelected(event) {
             this.selectedFile = event.target.files[0];
-        }
+        },
+
+        submitForm(event) {
+            "use strict";
+            event.preventDefault();
+            event.stopPropagation();
+
+            const formType = event.target.getAttribute("data-form-type");
+
+            const form = event.target;
+            if (!form.checkValidity()) {
+                form.classList.add("was-validated");
+                return;
+            }
+
+            if (formType === "add") {
+                this.addItem();
+            } else if (formType === "update") {
+                this.updateItem();
+            }
+
+            form.classList.remove("was-validated");
+        },
     },
 };
 </script>
