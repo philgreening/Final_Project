@@ -39,32 +39,21 @@ const auth = getAuth(app);
 
 const pinia = createPinia();
 
-// watch(
-//     pinia.state,
-//     (state) => {
-//       // persist the whole state to the local storage whenever it changes
-//       localStorage.setItem('piniaState', JSON.stringify(state))
-//     },
-//     { deep: true }
-//   )
+/* import the fontawesome core */
+import { library } from '@fortawesome/fontawesome-svg-core'
 
-// Sets a persistant store session
-// if(localStorage.getItem("state")) {
-//     pinia.state.value = JSON.parse(localStorage.getItem("state"));
-// };
+/* import font awesome icon component */
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
-// watch(
-//     pinia.state,
-//     (state) => {
-//         localStorage.setItem("state", JSON.stringify(state));
-//     },
-//     { deep: true}
-// );
-// auth.onAuthStateChanged(()=>{
-//     if(!appp) {
-//         createApp(App).use(pinia).use(router).use(VueAxios, axios).mount('#app')
-//     }
-// }
+/* import specific icons */
+import { faTrashCan, faPenToSquare} from '@fortawesome/free-regular-svg-icons'
+import { faTriangleExclamation, faCirclePlus, faCheck } from '@fortawesome/free-solid-svg-icons'
 
-createApp(App).use(pinia).use(router).use(VueAxios, axios).mount('#app')
+
+/* add icons to the library */
+library.add(faTrashCan, faTriangleExclamation, faPenToSquare, faCirclePlus, faCheck)
+
+
+
+createApp(App).use(pinia).use(router).use(VueAxios, axios).component('font-awesome-icon', FontAwesomeIcon).mount('#app')
 export { auth, storage, app, firebaseui }

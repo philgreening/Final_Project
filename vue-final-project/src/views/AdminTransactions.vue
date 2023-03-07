@@ -1,16 +1,16 @@
 <template>
-    <div class="container p-4">
+    <div class="container p-4 mt-3 shadow-lg">
         <h1 class="text-center"> Transactions</h1>
         <table class="table p-4">
             <thead>
-                <tr>
+                <tr >
                     <th scope="col">Item Name</th>
                     <th scope="col">User Name</th>
                     <th scope="col">Transaction status</th>
                     <th scope="col">Loan date</th>
                     <th scope="col">Due date</th>
                     <th scope="col">Date returned</th>
-                    <th scope="col">Return item?</th>
+                    <th class="text-center" scope="col">Return item?</th>
                 </tr>
             </thead>
             <tbody>
@@ -21,10 +21,6 @@
                         </td>
                     </template>
                     <td :key="transaction.transaction_status">{{ transaction.transaction_status }}
-                        <!-- <template v-if="transaction.transaction_status === 'On Loan'">
-                            <button type="button" @click="getIndex(transaction)" class="btn btn-danger"
-                                data-bs-toggle="modal" data-bs-target="#exampleModal">Return</button>
-                        </template> -->
                     </td> 
                     <td>{{ formatDate(transaction.loan_date) }}</td>
                     <template v-if="formatDate(transaction.due_date) < date && transaction.transaction_status === 'On Loan'">
@@ -32,10 +28,11 @@
                     </template>
                     <td v-else>{{ formatDate(transaction.due_date) }} </td>
                     <td>{{ formatDate(transaction.returned_date) }}</td>
-                    <td>
+                    <td class="text-center">
                         <template v-if="transaction.transaction_status === 'On Loan'">
-                            <button type="button" @click="getIndex(transaction)" class="btn btn-danger"
-                                data-bs-toggle="modal" data-bs-target="#exampleModal">Return</button>
+                            <font-awesome-icon icon="fa-solid fa-check" size="xl"
+                            type="button" @click="getIndex(transaction)" class="text-success"
+                                data-bs-toggle="modal" data-bs-target="#exampleModal"/>
                         </template>
                     </td>
                 </tr>
@@ -55,7 +52,6 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
-                    <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
                     <button type="button" class="btn btn-primary" @click="returnItem()" data-bs-dismiss="modal">Yes
                     </button>
                 </div>
@@ -81,7 +77,6 @@ export default {
             items: [],
             returnedItem: [],
             date: Date()
-            // returnedTransaction: []
         }
     },
     mounted() {
@@ -153,8 +148,7 @@ export default {
             const data = {
 
                 transaction_status: 'Returned'
-                // item_name: this.returned.item_name,
-                // user_id: userStore.user.id
+ 
             };
 
             await axios.patch('http://localhost:4000/update-transaction/' + this.returnedItem.transaction_id, data, {
@@ -183,12 +177,6 @@ export default {
             })
                 .then(response => {
                     console.log("res response upadte item: ", response.data);
-                    // finds item by id and renders new status to view 
-                    // for (let i = 0; i < this.items.length; i++) {
-                    //     if (this.transactions[i].transaction_id == this.returnedItem.transaction_id) {
-                    //         this.transactions[i].transaction_status = 'Returned';
-                    //     }
-                    // }
                     this.getAllTransactions();
                 })
                 .catch(error => {

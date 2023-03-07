@@ -1,13 +1,13 @@
 <template>
-    <div class="container p-4">
+    <div class="container p-4 mt-3 shadow-lg">
         <h1 class="text-center"> Reservations</h1>
         <table class="table p-4">
-            <thead>
+            <thead >
                 <tr>
                     <th scope="col">Item Name</th>
                     <th scope="col">User Name</th>
                     <th scope="col">Reservation Date</th>
-                    <th scope="col">Confirm Loan</th>
+                    <th class="text-center" scope="col">Confirm Loan</th>
                 </tr>
             </thead>
             <tbody>
@@ -17,9 +17,10 @@
                         <td v-if="user.user_id === reservation.user_id">{{ user.first_name + ` ` + user.last_name }}</td>
                     </template>
                     <td>{{ formatDate(reservation.res_date) }}</td>
-                    <td>
-                        <button type="button" @click="getResIndex(reservation)" class="btn btn-success"
-                                data-bs-toggle="modal" data-bs-target="#confirmLoanModal">Loan Item</button>
+                    <td class="text-center">
+                        <font-awesome-icon icon="fa-solid fa-check" size="xl"
+                        type="button" @click="getResIndex(reservation)" class="text-success"
+                                data-bs-toggle="modal" data-bs-target="#confirmLoanModal"/>
                     </td>
 
                 </tr>
@@ -118,8 +119,6 @@ export default {
 
             const data = {
 
-                // item_name: this.returned.item_name,
-                // user_id: userStore.user.id
                 item_id: this.reservedItem.item_id,
                 item_name: this.reservedItem.item_name,
                 user_id: this.reservedItem.user_id,
@@ -152,12 +151,7 @@ export default {
             })
                 .then(response => {
                     console.log("res response update item: ", response.data);
-                    // finds item by id and renders new status to view 
-                    // for (let i = 0; i < this.items.length; i++) {
-                    //     if (this.reservations[i].res_id == this.reservedItem.transaction_id) {
-                    //         this.transactions[i].transaction_status = 'On Loan';
-                    //     }
-                    // }
+        
                     this.getAllReservations();
                     this.$emit('update', 1);
                 })
@@ -166,11 +160,6 @@ export default {
                 })
         },
         async deleteResevation() {
-            // console.log(this.reservedItem.item_id);
-            // const data = {
-            //     status: 'On Loan'
-            // }
-
             await axios.delete('http://localhost:4000/delete-reservation/' + this.reservedItem.res_id, {
                 headers: {
                     Authorization: `Bearer ${userStore.authToken}`

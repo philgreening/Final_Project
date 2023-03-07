@@ -1,8 +1,8 @@
 <template>
-    <div class="container p-4">
+    <div class="container p-4 mt-3 shadow-lg">
         <h1 class="text-center"> Users</h1>
         <table class="table p-4">
-            <thead>
+            <thead class="text-center">
                 <tr>
                     <th scope="col">First Name</th>
                     <th scope="col">Last Name</th>
@@ -28,18 +28,18 @@
                                 id="flexSwitchCheckDefault">
                         </div>
                     </td>
-                    <td>
-                        <button type="button" @click="getIndex(user); getAllTransactions();" class="btn btn-danger"
+                    <td class="text-center">
+                        <button type="button" @click="getIndex(user); getAllTransactions();" class="btn btn-primary"
                             data-bs-toggle="modal" data-bs-target="#userTransactionsModal">Transactions
                         </button>
                     </td>
-                    <td>
-                        <button type="button" @click="getIndex(user); getAllReservations();" class="btn btn-danger"
-                            data-bs-toggle="modal" data-bs-target="#userResModal">Resrvations
+                    <td class="text-center">
+                        <button type="button" @click="getIndex(user); getAllReservations();" class="btn btn-primary"
+                            data-bs-toggle="modal" data-bs-target="#userResModal">Reservations
                         </button>
                     </td>
-                    <td>
-                        <button type="button" @click="getIndex(user); getAllTransactions();" class="btn btn-danger"
+                    <td class="text-center">
+                        <button type="button" @click="getIndex(user); getAllTransactions();" class="btn btn-primary"
                             data-bs-toggle="modal" data-bs-target="#userLoansModal">Current Loans
                         </button>
                     </td>
@@ -176,7 +176,7 @@
                     <div class="container p-4">
                         <h1 class="text-center"> Current Loans <br> </h1>
                         <table class="table p-4">
-                            <thead>
+                            <thead  class="text-center">
                                 <tr>
                                     <th scope="col">Item Name</th>
                                     <th scope="col">Transaction status</th>
@@ -198,11 +198,14 @@
                                                     class="badge rounded-pill bg-danger">Overdue</span></td>
                                         </template>
                                         <td v-else>{{ formatDate(transaction.due_date) }} </td>
-                                        <td>
-                                            <template v-if="transaction.transaction_status === 'On Loan'">
-                                                <button type="button" @click="getTransactionIndex(transaction)" class="btn btn-danger"
-                                                    data-bs-toggle="modal" data-bs-target="#returnModal">Return</button>
-                                            </template>
+                                        <td class="text-center">
+                                            <!-- <template v-if="transaction.transaction_status === 'On Loan'"> -->
+                                                <font-awesome-icon icon="fa-solid fa-check" size="xl"
+                                                 @click="getTransactionIndex(transaction)" class="btn text-success"
+                                                    data-bs-toggle="modal" data-bs-target="#returnModal"/>
+                                                    <!-- <button type="button" @click="getTransactionIndex(transaction)" class="btn btn-danger"
+                                                    data-bs-toggle="modal" data-bs-target="#returnModal">Return</button> -->
+                                            <!-- </template> -->
                                         </td>
                                     </template>
                                 </tr>

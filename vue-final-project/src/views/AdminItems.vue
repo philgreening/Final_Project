@@ -1,11 +1,10 @@
 <template>
-    <div class="container p-4">
+    <div class="container p-4 mt-3 shadow-lg">
         <h1 class="text-center">Items</h1>
-        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addItemModal">
-            Add Item
-        </button>
+        <font-awesome-icon icon="fa-solid fa-circle-plus" size="2xl" type="button" class="text-success mb-3" data-bs-toggle="modal"
+            data-bs-target="#addItemModal" title="Add an item" />
         <table class="table p-4">
-            <thead>
+            <thead class="text-center">
                 <tr>
                     <th scope="col">Item Name</th>
                     <th scope="col">Item Type</th>
@@ -21,24 +20,21 @@
                     <td>{{ item.item_type }}</td>
                     <td>{{ item.description }}</td>
                     <template v-if="item.status == 'On Loan'">
-                        <td class="text-danger">{{ item.status }}</td>
+                        <td class="text-danger text-center">
+                            <strong>{{ item.status }}</strong>
+                        </td>
                     </template>
-                    <td v-else>{{ item.status }}</td>
-                    <td>
-                        <button type="button" @click="getIndex(item)" class="btn btn-warning" data-bs-toggle="modal"
-                            data-bs-target="#editItemModal">
-                            Edit Item
-                        </button>
+                    <td v-else class="text-center">{{ item.status }}</td>
+                    <td class="text-center">
+                        <font-awesome-icon icon="fa-regular fa-pen-to-square" size="xl" @click="getIndex(item)"
+                        type="button" class="text-primary" data-bs-toggle="modal" data-bs-target="#editItemModal" />
                     </td>
-                    <td>
-                        <button v-if="item.status === 'Available'" type="button" @click="getIndex(item)"
-                            class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteItemModal">
-                            Delete Item
-                        </button>
-                        <p v-else class="h6">
-                            Can't delete item: <br />
-                            {{ item.status }}
-                        </p>
+                    <td class="text-center">
+                        <font-awesome-icon icon="fa-regular fa-trash-can" size="xl" v-if="item.status === 'Available'"
+                        type="button" @click="getIndex(item)" class="text-danger" data-bs-toggle="modal"
+                            data-bs-target="#deleteItemModal" />
+                        <font-awesome-icon v-else icon="fa-solid fa-triangle-exclamation" type="button" class="text-warning" size="xl"
+                            :title="'Item ' + item.status + ' Cannot Delete'" />
                     </td>
                 </tr>
             </tbody>
