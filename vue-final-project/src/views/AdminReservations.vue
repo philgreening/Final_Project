@@ -1,6 +1,9 @@
 <template>
     <div class="container p-4 mt-3 shadow-lg">
         <h1 class="text-center"> Reservations</h1>
+        <div class="mb-3">
+      <input type="text" class="form-control bg-light" v-model="search" placeholder="Search reservations...">
+    </div>
         <table class="table p-4">
             <thead >
                 <tr>
@@ -11,7 +14,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="reservation in reservations" :key="reservation.res_id">
+                <tr v-for="reservation in filteredReservations" :key="reservation.res_id">
                     <td >{{ reservation.item_name }}</td>
                     <template v-for="user in users" :key="user.user_id">
                         <td v-if="user.user_id === reservation.user_id">{{ user.first_name + ` ` + user.last_name }}</td>
@@ -19,7 +22,7 @@
                     <td>{{ formatDate(reservation.res_date) }}</td>
                     <td class="text-center">
                         <font-awesome-icon icon="fa-solid fa-check" size="xl"
-                        type="button" @click="getResIndex(reservation)" class="text-success"
+                        type="button" @click="getResIndex(reservation)" class="text-dark tick"
                                 data-bs-toggle="modal" data-bs-target="#confirmLoanModal"/>
                     </td>
 
@@ -53,10 +56,8 @@
 
 <script >
 
-import { onMounted, reactive, ref } from 'vue';
 import { useUserStore } from '../stores/userStore';
 import axios from 'axios';
-import AdminTransactions from './AdminTransactions.vue';
 
 const userStore = useUserStore();
 
@@ -65,12 +66,20 @@ export default {
         return {
             reservations: [],
             reservedItem: [],
-            users: []
+            users: [],
+            search:''
         }
     },
     mounted() {
         this.getAllReservations();
         this.getAllUsers();
+    },
+    computed:{
+        filteredReservations() {
+        return this.reservations.filter(reservation => {
+          return reservation.item_name.toLowerCase().includes(this.search.toLowerCase());
+        });
+      },
     },
     methods: {
         async getAllReservations() {
@@ -176,3 +185,9 @@ export default {
  
 };
 </script>
+
+<style scoped>
+.tick:hover{
+    color: red !important;
+}
+</style>

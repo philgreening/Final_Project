@@ -1,7 +1,29 @@
 <template>
   <div class="container p-4">
+    <div class="mb-3">
+      <input type="text" class="form-control bg-light" v-model="search" placeholder="Search items...">
+    </div>
     <div class="row">
-      <div class="col-md-4" v-for="item in items" :key="item.item_id">
+    <div class="col-md-4 mb-3">
+        <label for="status-filter" class="form-label">Filter by status</label>
+        <select id="ststus-filter" class="form-select bg-light" v-model="statusFilter">
+          <option value="">All</option>
+          <option v-for="status in statusList" :value="status">
+            {{ status }}
+          </option>
+        </select>
+      </div>
+      <div class="col-md-4">
+        <label for="type-filter" class="form-label">Filter by item type</label>
+        <select id="type-filter" class="form-select bg-light" v-model="itemTypeFilter">
+          <option value="">All</option>
+          <option v-for="item_type in itemTypeList" :value="item_type">
+            {{ item_type }}
+          </option>
+        </select>
+      </div>
+    <div class="row">
+      <div class="col-md-4" v-for="item in filteredItems" :key="item.item_id">
         <div class="card m-4 shadow">
           <img v-bind:src="item.imageUrl" class="card-img-top" alt="..." />
           <div class="card-body">
@@ -55,19 +77,18 @@
       </div>
     </div>
   </div>
+  </div>
 </template>
 
 <script>
-import { onMounted, ref, getCurrentInstance } from "vue";
+import { ref } from "vue";
 import axios from "axios";
-import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
+import { getAuth } from "firebase/auth";
 import { useUserStore } from "../stores/userStore";
 import { storage } from "../main";
 
 // import router from '../router';
 const userStore = useUserStore();
-const auth = getAuth();
-const storageRef = ref(storage);
 
 export default {
   name: "items",
@@ -77,6 +98,11 @@ export default {
       reservations: [],
       transactions: [],
       reservedItem: [],
+      search:'',
+      statusFilter: "",
+      itemTypeFilter:'',
+      statusList: ["Available","On Loan", "Reserved"],
+      itemTypeList: ["DIY", "Board Game", "Technology", "Cleaning", "Cooking", "Gardening" ]
     };
   },
   mounted() {
@@ -84,6 +110,22 @@ export default {
     this.getAllReservations();
     this.getAllTransactions();
   },
+  computed:{
+        filteredItems() {
+      return this.items.filter((items) => {
+        if (this.search && items.item_name.toLowerCase().indexOf(this.search.toLowerCase()) === -1) {
+          return false;
+        }
+        if (this.statusFilter && items.status !== this.statusFilter) {
+          return false;
+        }
+        if (this.itemTypeFilter && items.item_type !== this.itemTypeFilter) {
+          return false;
+        }
+        return true;
+      });
+    }
+    },
   methods: {
     async getAllItems() {
       //  console.log('token get all: ', userStore.authToken)

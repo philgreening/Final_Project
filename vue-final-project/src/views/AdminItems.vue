@@ -1,21 +1,44 @@
 <template>
     <div class="container p-4 mt-3 shadow-lg">
         <h1 class="text-center">Items</h1>
-        <font-awesome-icon icon="fa-solid fa-circle-plus" size="2xl" type="button" class="text-success mb-3" data-bs-toggle="modal"
+        <div class="mb-3">
+      <input type="text" class="form-control bg-light" v-model="search" placeholder="Search items...">
+    </div>
+    <div class="row">
+    <div class="col-md-4 mb-3">
+        <label for="status-filter" class="form-label">Filter by status</label>
+        <select id="ststus-filter" class="form-select bg-light" v-model="statusFilter">
+          <option value="">All</option>
+          <option v-for="status in statusList" :value="status">
+            {{ status }}
+          </option>
+        </select>
+      </div>
+      <div class="col-md-4">
+        <label for="type-filter" class="form-label">Filter by item type</label>
+        <select id="type-filter" class="form-select bg-light" v-model="itemTypeFilter">
+          <option value="">All</option>
+          <option v-for="item_type in itemTypeList" :value="item_type">
+            {{ item_type }}
+          </option>
+        </select>
+      </div>
+      </div>
+        <font-awesome-icon icon="fa-solid fa-circle-plus" size="2xl" type="button" class="text-success my-4" data-bs-toggle="modal"
             data-bs-target="#addItemModal" title="Add an item" />
         <table class="table p-4">
-            <thead class="text-center">
+            <thead>
                 <tr>
                     <th scope="col">Item Name</th>
                     <th scope="col">Item Type</th>
                     <th scope="col">Description</th>
-                    <th scope="col">Status</th>
-                    <th scope="col">Edit item</th>
-                    <th scope="col">Delete item</th>
+                    <th class="text-center" scope="col">Status</th>
+                    <th  class="text-center" scope="col">Edit item</th>
+                    <th class="text-center" scope="col">Delete item</th>
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="item in items" :key="item">
+                <tr v-for="item in filteredItems" :key="item">
                     <td>{{ item.item_name }}</td>
                     <td>{{ item.item_type }}</td>
                     <td>{{ item.description }}</td>
@@ -27,11 +50,11 @@
                     <td v-else class="text-center">{{ item.status }}</td>
                     <td class="text-center">
                         <font-awesome-icon icon="fa-regular fa-pen-to-square" size="xl" @click="getIndex(item)"
-                        type="button" class="text-primary" data-bs-toggle="modal" data-bs-target="#editItemModal" />
+                        type="button" class="text-dark edit" data-bs-toggle="modal" data-bs-target="#editItemModal" />
                     </td>
                     <td class="text-center">
                         <font-awesome-icon icon="fa-regular fa-trash-can" size="xl" v-if="item.status === 'Available'"
-                        type="button" @click="getIndex(item)" class="text-danger" data-bs-toggle="modal"
+                        type="button" @click="getIndex(item)" class="text-dark delete" data-bs-toggle="modal"
                             data-bs-target="#deleteItemModal" />
                         <font-awesome-icon v-else icon="fa-solid fa-triangle-exclamation" type="button" class="text-warning" size="xl"
                             :title="'Item ' + item.status + ' Cannot Delete'" />
@@ -75,12 +98,9 @@
                                 <select class="form-select" aria-label="Default select example"
                                     v-model.lazy="editItem.item_type" required>
                                     <option selected></option>
-                                    <option value="DIY">DIY</option>
-                                    <option value="Board Game">Board Game</option>
-                                    <option value="Technology">Technology</option>
-                                    <option value="Cleaning">Cleaning</option>
-                                    <option value="Cooking">Cooking</option>
-                                    <option value="Gardening">Gardening</option>
+                                    <option v-for="item_type in itemTypeList" :value="item_type">
+                                    {{ item_type }}
+                                    </option>
                                 </select>
                                 <div class="invalid-feedback">Please choose an item type.</div>
                             </div>
@@ -230,10 +250,31 @@ export default {
             },
             success: "",
             selectedFile: null,
+            search:'',
+            statusFilter: "",
+            itemTypeFilter:'',
+            statusList: ["Available","On Loan", "Reserved"],
+            itemTypeList: ["DIY", "Board Game", "Technology", "Cleaning", "Cooking", "Gardening" ]
         };
     },
     mounted() {
         this.getAllItems();
+    },
+    computed:{
+        filteredItems() {
+      return this.items.filter((items) => {
+        if (this.search && items.item_name.toLowerCase().indexOf(this.search.toLowerCase()) === -1) {
+          return false;
+        }
+        if (this.statusFilter && items.status !== this.statusFilter) {
+          return false;
+        }
+        if (this.itemTypeFilter && items.item_type !== this.itemTypeFilter) {
+          return false;
+        }
+        return true;
+      });
+    }
     },
     methods: {
         async getAllItems() {
@@ -363,3 +404,13 @@ export default {
     },
 };
 </script>
+
+<style scoped>
+    .delete:hover{
+        color: red !important;
+        ;
+    }
+    .edit:hover{
+        color: blue !important;
+    }
+</style>

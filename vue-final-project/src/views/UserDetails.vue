@@ -4,6 +4,7 @@
         <h1>My Details</h1>
         <!-- Button to open edit modal -->
         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editModal">
+            <font-awesome-icon icon="fa-regular fa-pen-to-square" size="xl" />
             Edit Details
         </button>
         <div class="row g-5">
