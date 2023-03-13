@@ -75,7 +75,7 @@ const currentUserId = ref("")
 
 const getUser =  async() => {
             await axios
-                .get("http://localhost:4000/User/" + currentUserId.value, {
+                .get("/api/v1/users/user/" + currentUserId.value, {
                     headers: {
                         Authorization: `Bearer ${userStore.authToken}`,
                     },
@@ -137,7 +137,7 @@ const submitForm = (event) => {
             // Send a patch request via API to update user's details
             await axios
                 .patch(
-                    "http://localhost:4000/update-user/" + currentUserId.value,
+                    "/api/v1/users/user" + currentUserId.value,
                     formData,
                     {
                         headers: {

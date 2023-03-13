@@ -254,7 +254,7 @@ export default {
             statusFilter: "",
             itemTypeFilter:'',
             statusList: ["Available","On Loan", "Reserved"],
-            itemTypeList: ["DIY", "Board Game", "Technology", "Cleaning", "Cooking", "Gardening" ]
+            itemTypeList: ["DIY", "Board Game", "Technology", "Cleaning", "Cooking", "Gardening", "Furniture" ]
         };
     },
     mounted() {
@@ -280,7 +280,7 @@ export default {
         async getAllItems() {
             console.log("token get all: ", userStore.authToken);
             await axios
-                .get("http://localhost:4000/item/all", {
+                .get("/api/v1/items", {
                     headers: {
                         Authorization: `Bearer ${userStore.authToken}`,
                     },
@@ -307,7 +307,7 @@ export default {
 
             await axios
                 .patch(
-                    "http://localhost:4000/update-item/" + this.editItem.item_id,
+                    "/api/v1/items/item/" + this.editItem.item_id,
                     formData,
                     {
                         headers: {
@@ -334,7 +334,7 @@ export default {
 
             //Call api and send formData to create item
             await axios
-                .post("http://localhost:4000/create-item/", formData, {
+                .post("/api/v1/items", formData, {
                     headers: {
                         Authorization: `Bearer ${userStore.authToken}`,
                         "Content-Type": "multipart/form-data",
@@ -351,7 +351,7 @@ export default {
         },
         async deleteItem() {
             await axios
-                .delete("http://localhost:4000/delete-item/" + this.editItem.item_id, {
+                .delete("/api/v1/items/item/" + this.editItem.item_id, {
                     headers: {
                         Authorization: `Bearer ${userStore.authToken}`,
                     },

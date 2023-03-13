@@ -84,7 +84,7 @@ export default {
     },
     methods: {
         async getAllTransactions() {
-            await axios.get('http://localhost:4000/Transaction/all', {
+            await axios.get('/api/v1/transactions', {
                 headers: {
                     Authorization: `Bearer ${userStore.authToken}`
                 }
@@ -98,7 +98,7 @@ export default {
                 })
         },
         async getAllUsers() {
-            await axios.get('http://localhost:4000/User/all', {
+            await axios.get('/api/v1/users', {
                 headers: {
                     Authorization: `Bearer ${userStore.authToken}`
                 }
@@ -113,7 +113,7 @@ export default {
         },
         async getAllItems() {
             console.log('token get all: ', userStore.authToken)
-            await axios.get('http://localhost:4000/item/all', {
+            await axios.get('/api/v1/items', {
                 headers: {
                     Authorization: `Bearer ${userStore.authToken}`
                 }

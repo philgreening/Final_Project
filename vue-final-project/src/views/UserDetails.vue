@@ -117,7 +117,7 @@ export default {
         // Fetch user data from API
         async getUser() {
             await axios
-                .get("http://localhost:4000/User/" + this.currentUserId, {
+                .get("/api/v1/users/user/" + this.currentUserId, {
                     headers: {
                         Authorization: `Bearer ${userStore.authToken}`,
                     },
@@ -170,7 +170,7 @@ export default {
             // Send a patch request via API to update user's details
             await axios
                 .patch(
-                    "http://localhost:4000/update-user/" + this.currentUserId,
+                    "/api/v1/users/user/" + this.currentUserId,
                     formData,
                     {
                         headers: {

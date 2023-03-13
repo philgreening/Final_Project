@@ -115,7 +115,7 @@ const register = () => {
         admin: false
       };
 
-      axios.post("http://localhost:4000/create-user", formData)
+      axios.post("/api/v1/users", formData)
     .then((response) => {
                     console.log("response: ", response.data);
                 })

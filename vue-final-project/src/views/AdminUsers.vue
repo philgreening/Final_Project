@@ -280,7 +280,7 @@ export default {
         async getAllUsers() {
             console.log(" get all users: ", userStore.user);
             await axios
-                .get("http://localhost:4000/User/all", {
+                .get("/api/v1/users", {
                     headers: {
                         Authorization: `Bearer ${userStore.authToken}`,
                     },
@@ -312,7 +312,7 @@ export default {
             };
 
             await axios
-                .patch("http://localhost:4000/update-user/" + this.user.user_id, data, {
+                .patch("/api/v1/users/user/" + this.user.user_id, data, {
                     headers: {
                         Authorization: `Bearer ${userStore.authToken}`,
                     },
@@ -327,7 +327,7 @@ export default {
         },
         async getAllTransactions() {
             await axios
-                .get("http://localhost:4000/Transaction/all", {
+                .get("/api/v1/transactions", {
                     headers: {
                         Authorization: `Bearer ${userStore.authToken}`,
                     },
@@ -342,7 +342,7 @@ export default {
         },
         async getAllReservations() {
             await axios
-                .get("http://localhost:4000/Reservation/all", {
+                .get("/api/v1/reservations", {
                     headers: {
                         Authorization: `Bearer ${userStore.authToken}`,
                     },
@@ -373,7 +373,7 @@ export default {
 
             await axios
                 .patch(
-                    "http://localhost:4000/update-transaction/" +
+                    "/api/v1/transactions/transaction/" +
                     this.returnedItem.transaction_id,
                     data,
                     {
@@ -398,7 +398,7 @@ export default {
 
             await axios
                 .patch(
-                    "http://localhost:4000/update-item/" + this.returnedItem.item_id,
+                    "/api/v1/items/item/" + this.returnedItem.item_id,
                     data,
                     {
                         headers: {
@@ -428,7 +428,7 @@ export default {
                 transaction_status: "On Loan",
             };
             await axios
-                .post("http://localhost:4000/create-transaction/", data, {
+                .post("/api/v1/transactions", data, {
                     headers: {
                         Authorization: `Bearer ${userStore.authToken}`,
                     },
@@ -450,7 +450,7 @@ export default {
 
             await axios
                 .patch(
-                    "http://localhost:4000/update-item/" + this.reservedItem.item_id,
+                    "/api/v1/items/item/" + this.reservedItem.item_id,
                     data,
                     {
                         headers: {
@@ -468,7 +468,7 @@ export default {
         async deleteResevation() {
             await axios
                 .delete(
-                    "http://localhost:4000/delete-reservation/" +
+                    "/api/v1/reservations/reservation/" +
                     this.reservedItem.res_id,
                     {
                         headers: {

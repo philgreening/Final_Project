@@ -2,8 +2,6 @@ const admin = require('firebase-admin');
 const credentials = require('./key.json');
 const { getStorage } = require('firebase-admin/storage');
 
-
-
 // Firebase configuration
 const firebaseConfig = {
   apiKey: 'AIzaSyCDqf1KgJPE8CkHzL3quKcILcRo6Xo_8XM',
@@ -17,7 +15,7 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase app
-admin.initializeApp(firebaseConfig);
+const app = admin.initializeApp(firebaseConfig);
 
 // Initialize Firestore database and storage bucket
 const db = admin.firestore();
@@ -46,4 +44,5 @@ module.exports = {
   FutureTime,
   admin,
   bucket,
+  auth: admin.auth(app),
 };

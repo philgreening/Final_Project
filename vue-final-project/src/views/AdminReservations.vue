@@ -83,7 +83,7 @@ export default {
     },
     methods: {
         async getAllReservations() {
-            await axios.get('http://localhost:4000/Reservation/all', {
+            await axios.get('/api/v1/reservations', {
                 headers: {
                     Authorization: `Bearer ${userStore.authToken}`
                 }
@@ -97,7 +97,7 @@ export default {
                 })
         },
         async getAllUsers() {
-            await axios.get('http://localhost:4000/User/all', {
+            await axios.get('/api/v1/users', {
                 headers: {
                     Authorization: `Bearer ${userStore.authToken}`
                 }
@@ -133,7 +133,7 @@ export default {
                 user_id: this.reservedItem.user_id,
                 transaction_status: 'On Loan',
             };
-            await axios.post('http://localhost:4000/create-transaction/',  data , {
+            await axios.post('/api/v1/transactions',  data , {
                 headers: {
                     Authorization: `Bearer ${userStore.authToken}`
                 }
@@ -153,7 +153,7 @@ export default {
                 status: 'On Loan'
             }
 
-            await axios.patch('http://localhost:4000/update-item/' + this.reservedItem.item_id, data, {
+            await axios.patch('/api/v1/items/item' + this.reservedItem.item_id, data, {
                 headers: {
                     Authorization: `Bearer ${userStore.authToken}`
                 }
@@ -169,7 +169,7 @@ export default {
                 })
         },
         async deleteResevation() {
-            await axios.delete('http://localhost:4000/delete-reservation/' + this.reservedItem.res_id, {
+            await axios.delete('/api/v1/reservations/reservation/' + this.reservedItem.res_id, {
                 headers: {
                     Authorization: `Bearer ${userStore.authToken}`
                 }

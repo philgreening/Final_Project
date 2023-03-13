@@ -30,7 +30,7 @@ export default {
   },
   methods:{
     async getAllItems() {
-      await axios.get('http://localhost:4000/item/all', {
+      await axios.get('/api/v1/items', {
       })
       .then(response => {
         this.items = response.data;

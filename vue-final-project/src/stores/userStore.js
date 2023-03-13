@@ -34,7 +34,7 @@ actions:{
           //this.getUser();
 
 
-          axios.get('http://localhost:4000/User/' + this.user.id, {
+          axios.get('/api/v1/users/user/' + this.user.id, {
                 headers: {
                     Authorization: `Bearer ${this.authToken}`
                 }

@@ -1,5 +1,5 @@
 import "bootstrap/dist/css/bootstrap.css"
-import { createApp, watch } from 'vue'
+import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 import axios from 'axios'
 import VueAxios from 'vue-axios'
@@ -38,6 +38,8 @@ const storage = getStorage(app);
 const auth = getAuth(app);
 
 const pinia = createPinia();
+
+axios.defaults.baseURL = 'http://127.0.0.1:8000'
 
 /* import the fontawesome core */
 import { library } from '@fortawesome/fontawesome-svg-core'

@@ -86,7 +86,7 @@ export default {
     methods: {
         async getAllReservations() {
             await axios
-                .get("http://localhost:4000/Reservation/all", {
+                .get("api/v1/reservations", {
                     headers: {
                         Authorization: `Bearer ${userStore.authToken}`,
                     },
@@ -101,7 +101,7 @@ export default {
         },
         async getAllUsers() {
             await axios
-                .get("http://localhost:4000/User/all", {
+                .get("/api/v1/users", {
                     headers: {
                         Authorization: `Bearer ${userStore.authToken}`,
                     },
@@ -131,7 +131,7 @@ export default {
         async deleteResevation() {
             await axios
                 .delete(
-                    "http://localhost:4000/delete-reservation/" +
+                    "http://localhost:8000/delete-reservation/" +
                     this.reservedItem.res_id,
                     {
                         headers: {
@@ -155,7 +155,7 @@ export default {
 
             await axios
                 .patch(
-                    "http://localhost:4000/update-item/" + this.reservedItem.item_id,
+                    "/api/v1/users/user/" + this.reservedItem.item_id,
                     data,
                     {
                         headers: {

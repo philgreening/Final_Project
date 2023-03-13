@@ -130,7 +130,7 @@ const register = () => {
         email: userEmail,
       };
 
-      axios.post("http://localhost:4000/create-user", formData);
+      axios.post("/api/v1/users", formData);
 
       router.push("/items");
     })
