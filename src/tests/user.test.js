@@ -1,7 +1,6 @@
 const request = require("supertest");
-const app = require("../index");
+const { app, server} = require("../index");
 const { getAuthToken } = require('./helpers/testHelpers');
-// const { db } = require("./mocks");
 
 describe('User routes', () => {
 
@@ -9,12 +8,14 @@ describe('User routes', () => {
   const routeSingle = "/api/v1/users/user/"
 
   let authToken;
-  
 
   beforeAll(async () => {
     authToken = await getAuthToken();
   });
 
+  afterAll((done) => {
+    server.close(done);
+  });
 
   describe('GET /api/v1/users', () => {
   
@@ -68,7 +69,7 @@ describe('User routes', () => {
     });
   });
 
-  describe("POST /create-user", () => {
+  describe("POST /api/v1/users", () => {
     it("should create a new user", async () => {
       const user = {
         first_name: "John",
@@ -106,7 +107,7 @@ describe('User routes', () => {
     });
   });
 
-  describe("PATCH /update-user/:id", () => {
+  describe("PATCH /api/v1/users/user/", () => {
     const testUserID = 'user123'
     it("should create a new user", async () => {
       const updatedUser = {
@@ -146,7 +147,7 @@ describe('User routes', () => {
   });
 
   
-  describe("DELETE /delete-user/:id", () => {
+  describe("DELETE /api/v1/users/user/", () => {
     const testUserID = 'user123'
     it("should delete a user", async () => {
 

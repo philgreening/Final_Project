@@ -32,8 +32,8 @@ app.use("/api/v1/users", userRoute);
 app.use("/api/v1/transactions", transactionRoute);
 app.use("/api/v1/reservations", resRoute);
 
-app.listen(port, hostname, () =>
+const server = app.listen(port, hostname, () =>
   console.log(`Server running at http://${hostname}:${port}/`)
 );
 
-module.exports = app;
+module.exports = { app, server};

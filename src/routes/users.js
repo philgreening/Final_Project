@@ -16,7 +16,7 @@ router.post("/", authenticate, async(req,res)=>{
         admin: false,
     };
     const uid = req.body.id;
-    console.log("User data: ", data);
+    // console.log("User data: ", data);
     await db.Users.doc(uid).set(data);
     res.send({msg:"User Added"});
 }catch(error){
@@ -41,7 +41,7 @@ router.get("/", authenticate, async(req,res)=>{
             }
             userArray.push(users);
         });
-        console.log(userArray);
+        // console.log(userArray);
         res.send(userArray); 
     } catch (error) {
         res.send({msg: "" + error })
@@ -53,7 +53,7 @@ router.get("/user/:id", authenticate, async(req,res)=>{
         const userRef = db.Users.doc(req.params.id);
         const response = await userRef.get();
     
-        console.log(response.data());
+        // console.log(response.data());
         res.send(response.data()); 
     } catch (error) {
         res.send({msg: "" + error })
@@ -74,7 +74,7 @@ router.patch("/user/:id", authenticate, async(req,res)=>{
 
         await userRef.update(data);
     
-        console.dir(req.body);
+        // console.dir(req.body);
         res.send({msg: "User updated"});
     } catch (error) {
         res.send({msg: "" + error })
