@@ -9,6 +9,11 @@ const db = require('../config');
 
 router.post("/", authenticate, async(req,res)=>{
     try{
+        if (!req.body.item_id || !req.body.item_name || !req.body.user_id
+            || !req.body.transaction_status || !req.body.loan_date
+            || !req.body.due_date ) {
+            return res.status(400).json({ msg: "Missing required fields" });
+            }
     const data = {
         item_id: req.body.item_id,
         item_name: req.body.item_name,
@@ -19,11 +24,11 @@ router.post("/", authenticate, async(req,res)=>{
         returned_date: ""
         
     };
-    console.log("Transaction data: ", data);
+    // console.log("Transaction data: ", data);
     await db.Transactions.add(data);
     res.send({msg:"Transaction created"});
 }catch(error){
-    console.log("" + error)
+    // console.log("" + error)
     res.send({msg: "" + error});
 }
 });
@@ -46,7 +51,7 @@ router.get("/", authenticate, async(req,res)=>{
             }
             transactionArray.push(transactions);
         });
-        console.log(transactionArray);
+        // console.log(transactionArray);
         res.send(transactionArray); 
     } catch (error) {
         res.send({msg: "" + error })
@@ -58,7 +63,7 @@ router.get("/transaction/:id", authenticate, async(req,res)=>{
         const transactionRef = db.Transactions.doc(req.params.id);
         const response = await transactionRef.get();
     
-        console.log(response.data());
+        // console.log(response.data());
         res.send(response.data()); 
     } catch (error) {
         res.send({msg: "" + error })
@@ -77,7 +82,7 @@ router.patch("/transaction/:id", authenticate, async(req,res)=>{
 
         await transactionRef.update(data);
     
-        console.dir(req.body);
+        // console.dir(req.body);
         res.send({msg: "Transaction updated"});
     } catch (error) {
         res.send({msg: "" + error })
