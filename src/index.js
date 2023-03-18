@@ -25,8 +25,8 @@ const resRoute = require("./routes/reservations");
 
 app.use(cors());
 app.use(express.json());
-app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 app.use("/api/v1/items", itemRoute);
 app.use("/api/v1/users", userRoute);
 app.use("/api/v1/transactions", transactionRoute);

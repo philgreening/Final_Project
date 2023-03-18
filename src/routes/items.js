@@ -14,6 +14,11 @@ const db = require('../config');
 ///////////////Item Routes///////////////
 
 router.post("/", authenticate, (req, res) => {
+
+    // Check if required data is present
+    if (!req.body.item_name || !req.body.item_type || !req.body.description || !req.body.status) {
+      return res.status(400).send({ msg: "Item name and type are required" });
+    }
     upload(req, res, async (err) => {
       if (err) {
         console.log("error line 26 " + err);
@@ -24,7 +29,7 @@ router.post("/", authenticate, (req, res) => {
       try {
         const file = req.file;
         // const bucket = db.admin.storage().bucket();
-        console.log("file: ", file.path);
+        // console.log("file: ", file.path);
   
         const processImage = await sharp(file.path)
           .resize(250, 250)
@@ -40,7 +45,8 @@ router.post("/", authenticate, (req, res) => {
             contentType: file.mimetype,
           },
         });
-  
+        console.log("Deleting files:", file.path, image);
+
         // Delete the files from the server
         fs.unlinkSync(file.path);
         fs.unlinkSync(image);

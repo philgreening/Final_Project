@@ -34,6 +34,9 @@ const Users = db.collection('Users');
 const CurrentTime = admin.firestore.FieldValue.serverTimestamp();
 const FutureTime = admin.firestore.Timestamp.fromMillis(Date.now() + 604800000);
 
+console.log("admintest", admin)
+
+
 
 module.exports = {
   Items,
@@ -44,5 +47,5 @@ module.exports = {
   FutureTime,
   admin,
   bucket,
-  auth: admin.auth(app),
+  auth: admin.auth(app)
 };

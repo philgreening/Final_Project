@@ -80,30 +80,6 @@ describe('Reservation routes', () => {
     });
   });
 
-  // describe('GET /api/v1/reservations/reservation/', () => {
-
-  //   // const userId = 'QObSxxu1i7f7j5ldZCE8YLLCp9y1';
-  
-  //   it('should return a single reservation', async () => {
-  //     const response = await request(app)
-  //       .get(routeSingle + resId)
-  //       .set('Authorization', `Bearer ${authToken}`)
-  //       .expect(200);
-
-  //       expect(response.body).toHaveProperty('item_id');
-  //       expect(response.body).toHaveProperty('item_name');
-  //       expect(response.body).toHaveProperty('user_id');
-  //       expect(response.body).toHaveProperty('res_date');
-  //   });
-
-    // it('should require authentication', async () => {
-    //   const response = await request(app)
-    //     .get(routeSingle + userId)
-    //     .expect(401);
-
-    //   expect(response.body.msg).toEqual('Unauthorised');
-    // });
-  // });
 
   describe("GET /api/v1/reservations/reservation/", () => {
     it("should return a reservation document with the specified ID", async () => {
