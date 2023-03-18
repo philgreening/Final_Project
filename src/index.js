@@ -15,6 +15,11 @@ const port = 8000;
 // const upload = multer({ dest: "uploads/" });
 
 const bodyParser = require("body-parser");
+const swaggerJsdoc = require("swagger-jsdoc")
+const swaggerUi = require("swagger-ui-express");
+const specs = require("../src/helpers/documentation")
+
+const swaggerSpecs = swaggerJsdoc(specs.options);
 // const authenticate = require('./middleware/middlewareAuth');
 // const upload = require('./middleware/middlewareFile');
 
@@ -31,6 +36,9 @@ app.use("/api/v1/items", itemRoute);
 app.use("/api/v1/users", userRoute);
 app.use("/api/v1/transactions", transactionRoute);
 app.use("/api/v1/reservations", resRoute);
+app.use("/api/v1/documentation", swaggerUi.serve);
+app.use("/api/v1/documentation", swaggerUi.setup(swaggerSpecs));
+
 
 const server = app.listen(port, hostname, () =>
   console.log(`Server running at http://${hostname}:${port}/`)
