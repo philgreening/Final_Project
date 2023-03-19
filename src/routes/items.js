@@ -70,6 +70,50 @@ router.post("/", authenticate, (req, res) => {
       }
     });
   });
+  
+
+   /**
+   * @swagger
+   * '/api/v1/items':
+   *  get:
+   *     tags:
+   *     - Items
+   *     summary: Get all items
+   *     responses:
+   *       200:
+   *        description: Success
+   *        content:
+   *          application/json:
+   *            schema:
+   *              type: object
+   *              properties:
+   *                item_id:
+   *                  type: string
+   *                  descriptiom: Unique user id
+   *                  example: AbT5rsv67hwbaf
+   *                item_name:
+   *                  type: string
+   *                  descriptiom: Name of the item
+   *                  example: Hammer
+   *                item_type:
+   *                  type: string
+   *                  descriptiom: Type of item
+   *                  example: DIY
+   *                description:
+   *                  type: string
+   *                  descriptiom: Item description
+   *                  example: For hitting nails
+   *                status:
+   *                  type: string
+   *                  descriptiom: Status of the item
+   *                  example: On Loan
+   *                imageUrl:
+   *                  type: string
+   *                  descriptiom: Unique user id
+   *                  example: https://example.com/image.jpg
+   *       404:
+   *        description: Items not found
+   */
 
 router.get("/", async(req,res)=>{
     try {

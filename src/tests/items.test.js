@@ -7,6 +7,7 @@ const fs = require("fs");
 
 jest.mock("fs", () => ({
   existsSync: jest.fn().mockReturnValue(true),
+  readdirSync: jest.fn(),
   unlink: jest.fn().mockResolvedValue(),
   unlinkSync: jest.fn(),
 }));
