@@ -6,6 +6,34 @@ const db = require('../config');
 
 ///////////////User Routes///////////////
 
+/**
+ * @swagger
+ * '/api/v1/users':
+ *  post:
+ *     security:
+ *      - bearerAuth: []
+ *     tags:
+ *     - Users
+ *     summary: Create a user
+ *     requestBody:
+ *      required: true
+ *      content:
+ *         application/json:
+ *          schema:
+ *            $ref: '#/components/schemas/User'
+ *     responses:
+ *       200:
+ *        description: Success
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: '#/components/schemas/UserResponse'
+ *       401:
+ *        description: Unauthorised
+ *       404:
+ *        description: Bad request
+ */
+
 router.post("/", authenticate, async(req,res)=>{
     try{
     const data = {
@@ -24,6 +52,28 @@ router.post("/", authenticate, async(req,res)=>{
     res.send({msg: "Missing" + error});
 }
 });
+
+/**
+ * @swagger
+ * '/api/v1/users':
+ *  get:
+ *     security:
+ *      - bearerAuth: []
+ *     tags:
+ *     - Users
+ *     summary: Get all users
+ *     responses:
+ *       200:
+ *        description: Success
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: '#/components/schemas/UserResponse'
+ *       401:
+ *        description: Unauthorised
+ *       404:
+ *        description: User not found
+ */
 
 router.get("/", authenticate, async(req,res)=>{
     try {
@@ -48,6 +98,33 @@ router.get("/", authenticate, async(req,res)=>{
     }
 });
 
+/**
+ * @swagger
+ * '/api/v1/users/user/{user_id}':
+ *  get:
+ *     security:
+ *      - bearerAuth: []
+ *     tags:
+ *     - Users
+ *     summary: Get a single user
+ *     parameters:
+ *      - name: user_id
+ *        in: path
+ *        description: The unique id of the user
+ *     responses:
+ *       200:
+ *        description: Success
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: '#/components/schemas/UserResponse'
+ *       401:
+ *        description: Unauthorised
+ *       404:
+ *        description: User not found
+ */
+
+
 router.get("/user/:id", authenticate, async(req,res)=>{
     try {
         const userRef = db.Users.doc(req.params.id);
@@ -59,6 +136,38 @@ router.get("/user/:id", authenticate, async(req,res)=>{
         res.send({msg: "" + error })
     }
 });
+
+/**
+ * @swagger
+ * '/api/v1/users/user/{user_id}':
+ *  patch:
+ *     security:
+ *      - bearerAuth: []
+ *     tags:
+ *     - Users
+ *     summary: Update a user
+ *     requestBody:
+ *      required: true
+ *      content:
+ *         application/json:
+ *          schema:
+ *            $ref: '#/components/schemas/User'
+ *     parameters:
+ *      - name: user_id
+ *        in: path
+ *        description: The unique id of the user
+ *     responses:
+ *       200:
+ *        description: Success
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: '#/components/schemas/UserResponse'
+ *       401:
+ *        description: Unauthorised
+ *       404:
+ *        description: Bad request
+ */
 
 router.patch("/user/:id", authenticate, async(req,res)=>{
     try {

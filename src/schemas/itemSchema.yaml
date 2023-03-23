@@ -1,0 +1,64 @@
+components:
+  schemas:
+    Item:
+      type: object
+      required:
+        - item_id
+        - item_name
+        - item_type
+        - description
+        - status
+        - imageUrl
+      properties:
+        item_id:
+          type: string
+          descriptiom: Unique user id.
+          default: AbT5rsv67hwbaf
+        item_name:
+          type: string
+          descriptiom: Name of the item.
+          default: Hammer
+        item_type:
+          type: string
+          descriptiom: Type of item.
+          default: DIY
+        description:
+          type: string
+          descriptiom: Item description.
+          default: For hitting nails
+        status:
+          type: string
+          descriptiom: Status of the item.
+          default: On Loan
+        imageUrl:
+          type: file
+          format: binary
+          descriptiom: Upload an image file.
+          default: https://example.com/image.jpg
+    ItemResponse:
+      type: object
+      properties:
+        item_id:
+          type: string
+          descriptiom: Unique user id.
+          example: AbT5rsv67hwbaf
+        item_name:
+          type: string
+          descriptiom: Name of the item.
+          example: Hammer
+        item_type:
+          type: string
+          descriptiom: Type of item.
+          example: DIY
+        description:
+          type: string
+          descriptiom: Item description.
+          example: For hitting nails
+        status:
+          type: string
+          descriptiom: Status of the item.
+          example: On Loan
+        imageUrl:
+          type: string
+          descriptiom: Link to image file.
+          example: https://example.com/image.jpg

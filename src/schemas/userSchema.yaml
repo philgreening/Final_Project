@@ -1,0 +1,57 @@
+
+components:
+  schemas:
+    User:
+      type: object
+      required:
+        - first_name
+        - last_name
+        - email
+        - address
+        - admin
+      properties:
+        first_name:
+          type: string
+          descriptiom: First name.
+          default: John
+        last_name:
+          type: string
+          descriptiom: Last Name.
+          default: Doe
+        email:
+          type: string
+          format: email
+          descriptiom: Email address.
+          default: fake@email.com
+        address:
+          type: string
+          descriptiom: Address.
+          default: 123, Fake Street
+        admin:
+          type: boolean
+          descriptiom: Status of the item.
+          default: True
+    UserResponse:
+      type: object
+      properties:
+        first_name:
+          type: string
+          descriptiom: First name.
+          example: John
+        last_name:
+          type: string
+          descriptiom: Last Name.
+          example: Doe
+        email:
+          type: string
+          format: email
+          descriptiom: Email address.
+          example: fake@email.com
+        address:
+          type: string
+          descriptiom: Address.
+          example: 123, Fake Street
+        admin:
+          type: boolean
+          descriptiom: Status of the item.
+          example: True

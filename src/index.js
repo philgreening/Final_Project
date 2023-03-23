@@ -17,9 +17,12 @@ const port = 8000;
 const bodyParser = require("body-parser");
 const swaggerJsdoc = require("swagger-jsdoc")
 const swaggerUi = require("swagger-ui-express");
-const specs = require("../src/helpers/documentation")
+// const specs = require("./schemas/documentation")
+const swaggerJson = require("../src/swagger.json")
 
-const swaggerSpecs = swaggerJsdoc(specs.options);
+
+// const swaggerSpecs = swaggerJsdoc(specs.options);
+const swaggerSpecs = swaggerJsdoc(swaggerJson);
 // const authenticate = require('./middleware/middlewareAuth');
 // const upload = require('./middleware/middlewareFile');
 

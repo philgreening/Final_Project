@@ -8,10 +8,40 @@ const fs = require('fs');
 const upload = require('../middleware/middlewareFile');
 const authenticate = require('../middleware/middlewareAuth');
 const db = require('../config');
+// const itemSchema = require('../helpers/itemSchema.yaml') 
 
 
 
 ///////////////Item Routes///////////////
+
+
+/**
+ * @swagger
+ * '/api/v1/items':
+ *  post:
+ *     security:
+ *      - bearerAuth: []
+ *     tags:
+ *     - Items
+ *     summary: Create an item
+ *     requestBody:
+ *      required: true
+ *      content:
+ *         multipart/form-data:
+ *          schema:
+ *            $ref: '#/components/schemas/Item'
+ *     responses:
+ *       200:
+ *        description: Success
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: '#/components/schemas/ItemResponse'
+ *       401:
+ *        description: Unauthorised
+ *       404:
+ *        description: Bad request
+ */
 
 router.post("/", authenticate, (req, res) => {
 
@@ -72,48 +102,24 @@ router.post("/", authenticate, (req, res) => {
   });
   
 
-   /**
-   * @swagger
-   * '/api/v1/items':
-   *  get:
-   *     tags:
-   *     - Items
-   *     summary: Get all items
-   *     responses:
-   *       200:
-   *        description: Success
-   *        content:
-   *          application/json:
-   *            schema:
-   *              type: object
-   *              properties:
-   *                item_id:
-   *                  type: string
-   *                  descriptiom: Unique user id
-   *                  example: AbT5rsv67hwbaf
-   *                item_name:
-   *                  type: string
-   *                  descriptiom: Name of the item
-   *                  example: Hammer
-   *                item_type:
-   *                  type: string
-   *                  descriptiom: Type of item
-   *                  example: DIY
-   *                description:
-   *                  type: string
-   *                  descriptiom: Item description
-   *                  example: For hitting nails
-   *                status:
-   *                  type: string
-   *                  descriptiom: Status of the item
-   *                  example: On Loan
-   *                imageUrl:
-   *                  type: string
-   *                  descriptiom: Unique user id
-   *                  example: https://example.com/image.jpg
-   *       404:
-   *        description: Items not found
-   */
+
+/**
+ * @swagger
+ * '/api/v1/items':
+ *  get:
+ *     tags:
+ *     - Items
+ *     summary: Get all items
+ *     responses:
+ *       200:
+ *        description: Success
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: '#/components/schemas/ItemResponse'
+ *       404:
+ *        description: Items not found
+ */
 
 router.get("/", async(req,res)=>{
     try {
@@ -138,6 +144,31 @@ router.get("/", async(req,res)=>{
 
 });
 
+/**
+ * @swagger
+ * '/api/v1/items/item/{item_id}':
+ *  get:
+ *     security:
+ *      - bearerAuth: []
+ *     tags:
+ *     - Items
+ *     summary: Get a single item
+ *     parameters:
+ *      - name: item_id
+ *        in: path
+ *        description: The unique id of the item
+ *     responses:
+ *       200:
+ *        description: Success
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: '#/components/schemas/ItemResponse'
+ *       401:
+ *        description: Unauthorised
+ *       404:
+ *        description: Item not found
+ */
 
 router.get("/item/:id", authenticate, async(req,res)=>{
     try {
@@ -150,6 +181,38 @@ router.get("/item/:id", authenticate, async(req,res)=>{
         res.send({msg: "" + error })
     }
 });
+
+/**
+ * @swagger
+ * '/api/v1/items/item/{item_id}':
+ *  patch:
+ *     security:
+ *      - bearerAuth: []
+ *     tags:
+ *     - Items
+ *     summary: Update a single item
+ *     requestBody:
+ *      required: true
+ *      content:
+ *         multipart/form-data:
+ *          schema:
+ *            $ref: '#/components/schemas/Item'
+ *     parameters:
+ *      - name: item_id
+ *        in: path
+ *        description: The unique id of the item
+ *     responses:
+ *       200:
+ *        description: Success
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: '#/components/schemas/ItemResponse'
+ *       401:
+ *        description: Unauthorised
+ *       404:
+ *        description: Item not found
+ */
 
 router.patch("/item/:id", authenticate, async(req, res) => {
     upload(req, res, async (err) => {
@@ -216,6 +279,28 @@ router.patch("/item/:id", authenticate, async(req, res) => {
       }
     });
   });
+
+/**
+ * @swagger
+ * '/api/v1/items/item/{item_id}':
+ *  delete:
+ *     security:
+ *      - bearerAuth: []
+ *     tags:
+ *     - Items
+ *     summary: Delete a single item
+ *     parameters:
+ *      - name: item_id
+ *        in: path
+ *        description: The unique id of the item
+ *     responses:
+ *       200:
+ *        description: Success
+ *       401:
+ *        description: Unauthorised
+ *       404:
+ *        description: Item not found
+ */
 
 router.delete("/item/:id", authenticate, async(req,res)=>{
     try {
