@@ -6,6 +6,34 @@ const db = require('../config');
 
 ///////////////Reservation Routes///////////////
 
+/**
+ * @swagger
+ * '/api/v1/reservations':
+ *  post:
+ *     security:
+ *      - bearerAuth: []
+ *     tags:
+ *     - Reservations
+ *     summary: Create a reservation
+ *     requestBody:
+ *      required: true
+ *      content:
+ *         application/json:
+ *          schema:
+ *            $ref: '#/components/schemas/Reservation'
+ *     responses:
+ *       200:
+ *        description: Success
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: '#/components/schemas/ReservationResponse'
+ *       401:
+ *        description: Unauthorised
+ *       404:
+ *        description: Bad request
+ */
+
 router.post("/", authenticate, async(req,res)=>{
     try{
     
@@ -27,6 +55,28 @@ router.post("/", authenticate, async(req,res)=>{
     res.send({msg: error});
 }
 });
+
+/**
+ * @swagger
+ * '/api/v1/reservations':
+ *  get:
+ *     security:
+ *      - bearerAuth: []
+ *     tags:
+ *     - Reservations
+ *     summary: Get all reservations
+ *     responses:
+ *       200:
+ *        description: Success
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: '#/components/schemas/ReservationResponse'
+ *       401:
+ *        description: Unauthorised
+ *       404:
+ *        description: Reservations not found
+ */
 
 router.get("/", authenticate, async(req,res)=>{
     try {
@@ -50,6 +100,32 @@ router.get("/", authenticate, async(req,res)=>{
     }
 });
 
+/**
+ * @swagger
+ * '/api/v1/reservations/reservation/{res_id}':
+ *  get:
+ *     security:
+ *      - bearerAuth: []
+ *     tags:
+ *     - Reservations
+ *     summary: Get a single reservation
+ *     parameters:
+ *      - name: res_id
+ *        in: path
+ *        description: The unique reservation id
+ *     responses:
+ *       200:
+ *        description: Success
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: '#/components/schemas/ReservationResponse'
+ *       401:
+ *        description: Unauthorised
+ *       404:
+ *        description: User not found
+ */
+
 router.get("/reservation/:id", authenticate, async(req,res)=>{
     try {
         const resRef = db.Reservations.doc(req.params.id);
@@ -61,6 +137,28 @@ router.get("/reservation/:id", authenticate, async(req,res)=>{
         res.send({msg: "" + error })
     }
 });
+
+/**
+ * @swagger
+ * '/api/v1/reservations/reservation/{res_id}':
+ *  delete:
+ *     security:
+ *      - bearerAuth: []
+ *     tags:
+ *     - Reservations
+ *     summary: Delete a reservation
+ *     parameters:
+ *      - name: res_id
+ *        in: path
+ *        description: The unique reservation id
+ *     responses:
+ *       200:
+ *        description: Success
+ *       401:
+ *        description: Unauthorised
+ *       404:
+ *        description: User not found
+ */
 
 router.delete("/reservation/:id", authenticate, async(req,res)=>{
     try {

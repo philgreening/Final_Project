@@ -1,0 +1,57 @@
+
+components:
+  schemas:
+    Reservation:
+      type: object
+      required:
+        - res_id
+        - item_id
+        - item_name
+        - user_id
+        - res_date
+      properties:
+        res_id:
+          type: string
+          descriptiom: Unique reservation id.
+          default: zS2pLEXiE0V7kBC84NBH
+        item_id:
+          type: string
+          descriptiom: Unique item id.
+          default: 7y4cajh2x1xHU3wUyTrj
+        item_name:
+          type: string
+          descriptiom: Item Name.
+          default: Ladder
+        user_id:
+          type: string
+          descriptiom: Unique user id.
+          default: QObSxxu1i7f7j5ldZCE8YLLCp9y1
+        res_date:
+          type: string
+          format: date-time
+          descriptiom: Date of reservation..
+          default: 24 March 2023 at 16:59:30 UTC
+    ReservationResponse:
+      type: object
+      properties:
+        res_id:
+          type: string
+          descriptiom: Unique reservation id.
+          example: zS2pLEXiE0V7kBC84NBH
+        item_id:
+          type: string
+          descriptiom: Unique item id.
+          example: 7y4cajh2x1xHU3wUyTrj
+        item_name:
+          type: string
+          descriptiom: Item Name.
+          example: Ladder
+        user_id:
+          type: string
+          descriptiom: Unique user id.
+          example: QObSxxu1i7f7j5ldZCE8YLLCp9y1
+        res_date:
+          type: string
+          format: date-time
+          descriptiom: Date of reservation..
+          example: 24 March 2023 at 16:59:30 UTC

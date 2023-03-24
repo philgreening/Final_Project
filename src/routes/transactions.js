@@ -7,6 +7,34 @@ const db = require('../config');
 
 ///////////////Transaction Routes///////////////
 
+/**
+ * @swagger
+ * '/api/v1/transactions':
+ *  post:
+ *     security:
+ *      - bearerAuth: []
+ *     tags:
+ *     - Transactions
+ *     summary: Create a transaction
+ *     requestBody:
+ *      required: true
+ *      content:
+ *         application/json:
+ *          schema:
+ *            $ref: '#/components/schemas/Transaction'
+ *     responses:
+ *       200:
+ *        description: Success
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: '#/components/schemas/TransactionResponse'
+ *       401:
+ *        description: Unauthorised
+ *       404:
+ *        description: Bad request
+ */
+
 router.post("/", authenticate, async(req,res)=>{
     try{
         if (!req.body.item_id || !req.body.item_name || !req.body.user_id
@@ -33,6 +61,28 @@ router.post("/", authenticate, async(req,res)=>{
 }
 });
 
+/**
+ * @swagger
+ * '/api/v1/transactions':
+ *  get:
+ *     security:
+ *      - bearerAuth: []
+ *     tags:
+ *     - Transactions
+ *     summary: Get all transactions
+ *     responses:
+ *       200:
+ *        description: Success
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: '#/components/schemas/TransactionResponse'
+ *       401:
+ *        description: Unauthorised
+ *       404:
+ *        description: Transactions not found
+ */
+
 router.get("/", authenticate, async(req,res)=>{
     try {
         const response = await db.Transactions.get();
@@ -58,6 +108,32 @@ router.get("/", authenticate, async(req,res)=>{
     }
 });
 
+/**
+ * @swagger
+ * '/api/v1/transactions/transaction/{transaction_id}':
+ *  get:
+ *     security:
+ *      - bearerAuth: []
+ *     tags:
+ *     - Transactions
+ *     summary: Get a single transaction
+ *     parameters:
+ *      - name: res_id
+ *        in: path
+ *        description: The unique transaction id
+ *     responses:
+ *       200:
+ *        description: Success
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: '#/components/schemas/TransactionResponse'
+ *       401:
+ *        description: Unauthorised
+ *       404:
+ *        description: Transaction not found
+ */
+
 router.get("/transaction/:id", authenticate, async(req,res)=>{
     try {
         const transactionRef = db.Transactions.doc(req.params.id);
@@ -70,6 +146,37 @@ router.get("/transaction/:id", authenticate, async(req,res)=>{
     }
 });
 
+/**
+ * @swagger
+ * '/api/v1/transactions/transaction/{transaction_id}':
+ *  patch:
+ *     security:
+ *      - bearerAuth: []
+ *     tags:
+ *     - Transactions
+ *     summary: Update a transaction
+ *     requestBody:
+ *      required: true
+ *      content:
+ *         application/json:
+ *          schema:
+ *            $ref: '#/components/schemas/Transaction'
+ *     parameters:
+ *      - name: user_id
+ *        in: path
+ *        description: The unique transaction id
+ *     responses:
+ *       200:
+ *        description: Success
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: '#/components/schemas/TransactionResponse'
+ *       401:
+ *        description: Unauthorised
+ *       404:
+ *        description: Bad request
+ */
 
 router.patch("/transaction/:id", authenticate, async(req,res)=>{
     try {

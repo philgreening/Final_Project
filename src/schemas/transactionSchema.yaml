@@ -1,0 +1,86 @@
+components:
+  schemas:
+    Transaction:
+      type: object
+      required:
+        - transaction_id
+        - item_id
+        - item_name
+        - user_id
+        - transaction_status
+        - loan_date
+        - due_date
+      properties:
+        transaction_id:
+          type: string
+          descriptiom: Unique transaction id.
+          default: 0Yh8re5BW2sLmVmujd7q
+        item_id:
+          type: string
+          descriptiom: Unique item id.
+          default: 7y4cajh2x1xHU3wUyTrj
+        item_name:
+          type: string
+          descriptiom: Item Name.
+          default: Ladder
+        user_id:
+          type: string
+          descriptiom: Unique user id.
+          default: QObSxxu1i7f7j5ldZCE8YLLCp9y1
+        transaction_status:
+          type: string
+          descriptiom: Transaction status.
+          default: On Loan
+        loan_date:
+          type: string
+          format: date-time
+          descriptiom: Date of reservation..
+          default: 24 March 2023 at 16:59:30 UTC
+        due_date:
+          type: string
+          format: date-time
+          descriptiom: Date of reservation..
+          default: 31 March 2023 at 16:59:30 UTC
+        returned_date:
+          type: string
+          format: date-time
+          descriptiom: Date of reservation..
+          default: 30 March 2023 at 16:59:30 UTC
+    TransactionResponse:
+      type: object
+      properties:
+        transaction_id:
+          type: string
+          descriptiom: Unique transaction id.
+          example: 0Yh8re5BW2sLmVmujd7q
+        item_id:
+          type: string
+          descriptiom: Unique item id.
+          example: 7y4cajh2x1xHU3wUyTrj
+        item_name:
+          type: string
+          descriptiom: Item Name.
+          example: Ladder
+        user_id:
+          type: string
+          descriptiom: Unique user id.
+          example: QObSxxu1i7f7j5ldZCE8YLLCp9y1
+        transaction_status:
+          type: string
+          descriptiom: Transaction status.
+          example: On Loan
+        loan_date:
+          type: string
+          format: date-time
+          descriptiom: Date of reservation..
+          example: 24 March 2023 at 16:59:30 UTC
+        due_date:
+          type: string
+          format: date-time
+          descriptiom: Date of reservation..
+          example: 31 March 2023 at 16:59:30 UTC
+        returned_date:
+          type: string
+          format: date-time
+          descriptiom: Date of reservation..
+          example: 30 March 2023 at 16:59:30 UTC

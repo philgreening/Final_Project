@@ -1,8 +1,8 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
 
-const authenticate = require('../middleware/middlewareAuth');
-const db = require('../config');
+const authenticate = require("../middleware/middlewareAuth");
+const db = require("../config");
 
 ///////////////User Routes///////////////
 
@@ -34,23 +34,24 @@ const db = require('../config');
  *        description: Bad request
  */
 
-router.post("/", authenticate, async(req,res)=>{
-    try{
+router.post("/", authenticate, async (req, res) => {
+  try {
     const data = {
-        first_name: req.body.first_name,
-        last_name: req.body.last_name,
-        email: req.body.email,
-        address: req.body.address,
-        admin: false,
+      first_name: req.body.first_name,
+      last_name: req.body.last_name,
+      email: req.body.email,
+      address: req.body.address,
+      admin: false,
     };
+
     const uid = req.body.id;
-    // console.log("User data: ", data);
+
     await db.Users.doc(uid).set(data);
-    res.send({msg:"User Added"});
-}catch(error){
-    console.log("" + error)
-    res.send({msg: "Missing" + error});
-}
+    res.send({ msg: "User Added" });
+  } catch (error) {
+    console.log("" + error);
+    res.send({ msg: "Missing" + error });
+  }
 });
 
 /**
@@ -75,27 +76,27 @@ router.post("/", authenticate, async(req,res)=>{
  *        description: User not found
  */
 
-router.get("/", authenticate, async(req,res)=>{
-    try {
-        const response = await db.Users.get();
-        let userArray = [];
-        response.forEach(doc =>{
+router.get("/", authenticate, async (req, res) => {
+  try {
+    const response = await db.Users.get();
+    let userArray = [];
 
-            const users = {
-                user_id: doc.id,
-                first_name: doc.data().first_name,
-                last_name: doc.data().last_name,
-                email: doc.data().email,
-                address: doc.data().address,
-                admin: doc.data().admin
-            }
-            userArray.push(users);
-        });
-        // console.log(userArray);
-        res.send(userArray); 
-    } catch (error) {
-        res.send({msg: "" + error })
-    }
+    response.forEach((doc) => {
+      const users = {
+        user_id: doc.id,
+        first_name: doc.data().first_name,
+        last_name: doc.data().last_name,
+        email: doc.data().email,
+        address: doc.data().address,
+        admin: doc.data().admin,
+      };
+      userArray.push(users);
+    });
+    // console.log(userArray);
+    res.send(userArray);
+  } catch (error) {
+    res.send({ msg: "" + error });
+  }
 });
 
 /**
@@ -124,17 +125,15 @@ router.get("/", authenticate, async(req,res)=>{
  *        description: User not found
  */
 
+router.get("/user/:id", authenticate, async (req, res) => {
+  try {
+    const userRef = db.Users.doc(req.params.id);
+    const response = await userRef.get();
 
-router.get("/user/:id", authenticate, async(req,res)=>{
-    try {
-        const userRef = db.Users.doc(req.params.id);
-        const response = await userRef.get();
-    
-        // console.log(response.data());
-        res.send(response.data()); 
-    } catch (error) {
-        res.send({msg: "" + error })
-    }
+    res.send(response.data());
+  } catch (error) {
+    res.send({ msg: "" + error });
+  }
 });
 
 /**
@@ -169,37 +168,58 @@ router.get("/user/:id", authenticate, async(req,res)=>{
  *        description: Bad request
  */
 
-router.patch("/user/:id", authenticate, async(req,res)=>{
-    try {
-        const userRef = db.Users.doc(req.params.id);
+router.patch("/user/:id", authenticate, async (req, res) => {
+  try {
+    const userRef = db.Users.doc(req.params.id);
 
-        const data = {
-            first_name: req.body.first_name,
-            last_name: req.body.last_name,
-            email: req.body.email,
-            address: req.body.address,
-            admin: req.body.admin
-        };
+    const data = {
+      first_name: req.body.first_name,
+      last_name: req.body.last_name,
+      email: req.body.email,
+      address: req.body.address,
+      admin: req.body.admin,
+    };
 
-        await userRef.update(data);
-    
-        // console.dir(req.body);
-        res.send({msg: "User updated"});
-    } catch (error) {
-        res.send({msg: "" + error })
-    }
+    await userRef.update(data);
+
+    res.send({ msg: "User updated" });
+  } catch (error) {
+    res.send({ msg: "" + error });
+  }
 });
 
-router.delete("/user/:id", authenticate, async(req,res)=>{
-    try {
-        const userRef = db.Users.doc(req.params.id);
-        await userRef.delete();
-    
-        console.log("User deleted");
-        res.send({msg: "User deleted"}); 
-    } catch (error) {
-        res.send({msg: "" + error })
-    }
+/**
+ * @swagger
+ * '/api/v1/users/user/{user_id}':
+ *  delete:
+ *     security:
+ *      - bearerAuth: []
+ *     tags:
+ *     - Users
+ *     summary: Delete a user
+ *     parameters:
+ *      - name: user_id
+ *        in: path
+ *        description: The unique id of the user
+ *     responses:
+ *       200:
+ *        description: Success
+ *       401:
+ *        description: Unauthorised
+ *       404:
+ *        description: User not found
+ */
+
+router.delete("/user/:id", authenticate, async (req, res) => {
+  try {
+    const userRef = db.Users.doc(req.params.id);
+    await userRef.delete();
+
+    console.log("User deleted");
+    res.send({ msg: "User deleted" });
+  } catch (error) {
+    res.send({ msg: "" + error });
+  }
 });
 
 module.exports = router;
