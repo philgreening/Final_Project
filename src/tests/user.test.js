@@ -1,11 +1,10 @@
 const request = require("supertest");
-const { app, server} = require("../index");
-const { getAuthToken } = require('./helpers/testHelpers');
+const { app, server } = require("../index");
+const { getAuthToken } = require("./helpers/testHelpers");
 
-describe('User routes', () => {
-
-  const routeAll = "/api/v1/users"
-  const routeSingle = "/api/v1/users/user/"
+describe("User routes", () => {
+  const routeAll = "/api/v1/users";
+  const routeSingle = "/api/v1/users/user/";
 
   let authToken;
 
@@ -17,55 +16,51 @@ describe('User routes', () => {
     server.close(done);
   });
 
-  describe('GET /api/v1/users', () => {
-  
-    it('should return all users', async () => {
+  describe("GET /api/v1/users", () => {
+    it("should return all users", async () => {
       const response = await request(app)
         .get(routeAll)
-        .set('Authorization', `Bearer ${authToken}`)
+        .set("Authorization", `Bearer ${authToken}`)
         .expect(200);
 
       expect(response.body.length).toBeGreaterThan(0);
-      expect(response.body[0]).toHaveProperty('user_id');
-      expect(response.body[0]).toHaveProperty('first_name');
-      expect(response.body[0]).toHaveProperty('last_name');
-      expect(response.body[0]).toHaveProperty('email');
-      expect(response.body[0]).toHaveProperty('address');
-      expect(response.body[0]).toHaveProperty('admin');
+      expect(response.body[0]).toHaveProperty("user_id");
+      expect(response.body[0]).toHaveProperty("first_name");
+      expect(response.body[0]).toHaveProperty("last_name");
+      expect(response.body[0]).toHaveProperty("email");
+      expect(response.body[0]).toHaveProperty("address");
+      expect(response.body[0]).toHaveProperty("admin");
     });
 
-    it('should require authentication', async () => {
-      const response = await request(app)
-        .get(routeAll)
-        .expect(401);
+    it("should require authentication", async () => {
+      const response = await request(app).get(routeAll).expect(401);
 
-      expect(response.body.msg).toEqual('Unauthorised');
+      expect(response.body.msg).toEqual("Unauthorised");
     });
   });
 
-  describe('GET /api/v1/users/user', () => {
+  describe("GET /api/v1/users/user", () => {
+    const userId = "QObSxxu1i7f7j5ldZCE8YLLCp9y1";
 
-    const userId = 'QObSxxu1i7f7j5ldZCE8YLLCp9y1';
-  
-    it('should return a sinbgle user record', async () => {
+    it("should return a sinbgle user record", async () => {
       const response = await request(app)
         .get(routeSingle + userId)
-        .set('Authorization', `Bearer ${authToken}`)
+        .set("Authorization", `Bearer ${authToken}`)
         .expect(200);
 
-      expect(response.body).toHaveProperty('first_name');
-      expect(response.body).toHaveProperty('last_name');
-      expect(response.body).toHaveProperty('email');
-      expect(response.body).toHaveProperty('address');
-      expect(response.body).toHaveProperty('admin');
+      expect(response.body).toHaveProperty("first_name");
+      expect(response.body).toHaveProperty("last_name");
+      expect(response.body).toHaveProperty("email");
+      expect(response.body).toHaveProperty("address");
+      expect(response.body).toHaveProperty("admin");
     });
 
-    it('should require authentication', async () => {
+    it("should require authentication", async () => {
       const response = await request(app)
         .get(routeSingle + userId)
         .expect(401);
 
-      expect(response.body.msg).toEqual('Unauthorised');
+      expect(response.body.msg).toEqual("Unauthorised");
     });
   });
 
@@ -77,14 +72,14 @@ describe('User routes', () => {
         email: "john.doe@example.com",
         address: "123 Main St",
         id: "user123",
-        admin: false
+        admin: false,
       };
 
       const response = await request(app)
         .post(routeAll)
-        .set('Authorization', `Bearer ${authToken}`)
+        .set("Authorization", `Bearer ${authToken}`)
         .send(user);
-  
+
       expect(response.statusCode).toBe(200);
       expect(response.body.msg).toBe("User Added");
     });
@@ -96,82 +91,74 @@ describe('User routes', () => {
         email: "john.doe@example.com",
         // Missing address and id
       };
-  
+
       const response = await request(app)
         .post(routeAll)
-        .set('Authorization', `Bearer ${authToken}`)
+        .set("Authorization", `Bearer ${authToken}`)
         .send(user);
-  
+
       expect(response.statusCode).toBe(200);
       expect(response.body.msg).toContain("Missing");
     });
   });
 
   describe("PATCH /api/v1/users/user/", () => {
-    const testUserID = 'user123'
+    const testUserID = "user123";
     it("should create a new user", async () => {
       const updatedUser = {
-        first_name: 'Jane',
-        last_name: 'Doe',
-        email: 'janedoe@test.com',
-        address: '456 Elm St',
-        admin: true
-    };
+        first_name: "Jane",
+        last_name: "Doe",
+        email: "janedoe@test.com",
+        address: "456 Elm St",
+        admin: true,
+      };
 
       const response = await request(app)
         .patch(routeSingle + testUserID)
-        .set('Authorization', `Bearer ${authToken}`)
+        .set("Authorization", `Bearer ${authToken}`)
         .send(updatedUser);
-  
+
       expect(response.statusCode).toBe(200);
       expect(response.body.msg).toBe("User updated");
     });
 
     it("should return an error if data is missing", async () => {
       const updatedUser = {
-        first_name: 'Jane',
-        last_name: 'Doe',
-        email: 'janedoe@test.com',
-        address: '456 Elm St',
-        admin: true
-    };
-  
+        first_name: "Jane",
+        last_name: "Doe",
+        email: "janedoe@test.com",
+        address: "456 Elm St",
+        admin: true,
+      };
+
       const response = await request(app)
-        .patch(routeSingle + '123')
-        .set('Authorization', `Bearer ${authToken}`)
+        .patch(routeSingle + "123")
+        .set("Authorization", `Bearer ${authToken}`)
         .send(updatedUser);
-  
+
       expect(response.statusCode).toBe(200);
-      expect(response.body.msg).not.toBe('');
+      expect(response.body.msg).not.toBe("");
     });
   });
 
-  
   describe("DELETE /api/v1/users/user/", () => {
-    const testUserID = 'user123'
+    const testUserID = "user123";
     it("should delete a user", async () => {
-
-
       const response = await request(app)
         .delete(routeSingle + testUserID)
-        .set('Authorization', `Bearer ${authToken}`)
-        // .send(updatedUser);
-  
+        .set("Authorization", `Bearer ${authToken}`);
+
       expect(response.statusCode).toBe(200);
       expect(response.body.msg).toBe("User deleted");
     });
 
     it("should return an error if username is wrong", async () => {
-  
       const response = await request(app)
-        .delete(routeSingle + '123')
-        .set('Authorization', `Bearer ${authToken}`)
-        // .send(updatedUser);
-  
+        .delete(routeSingle + "123")
+        .set("Authorization", `Bearer ${authToken}`);
+
       expect(response.statusCode).toBe(200);
-      expect(response.body.msg).not.toBe('');
+      expect(response.body.msg).not.toBe("");
     });
   });
-  
-
 });

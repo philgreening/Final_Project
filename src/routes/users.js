@@ -3,6 +3,7 @@ const router = express.Router();
 
 const authenticate = require("../middleware/middlewareAuth");
 const db = require("../config");
+const logger = require("../logger");
 
 ///////////////User Routes///////////////
 
@@ -34,6 +35,7 @@ const db = require("../config");
  *        description: Bad request
  */
 
+// Create User
 router.post("/", authenticate, async (req, res) => {
   try {
     const data = {
@@ -47,10 +49,13 @@ router.post("/", authenticate, async (req, res) => {
     const uid = req.body.id;
 
     await db.Users.doc(uid).set(data);
+
     res.send({ msg: "User Added" });
+    logger.info("User added");
   } catch (error) {
     console.log("" + error);
     res.send({ msg: "Missing" + error });
+    logger.error(error);
   }
 });
 
@@ -76,6 +81,7 @@ router.post("/", authenticate, async (req, res) => {
  *        description: User not found
  */
 
+// Get all users
 router.get("/", authenticate, async (req, res) => {
   try {
     const response = await db.Users.get();
@@ -92,10 +98,11 @@ router.get("/", authenticate, async (req, res) => {
       };
       userArray.push(users);
     });
-    // console.log(userArray);
+
     res.send(userArray);
   } catch (error) {
     res.send({ msg: "" + error });
+    logger.error(error);
   }
 });
 
@@ -125,6 +132,7 @@ router.get("/", authenticate, async (req, res) => {
  *        description: User not found
  */
 
+// Get single user
 router.get("/user/:id", authenticate, async (req, res) => {
   try {
     const userRef = db.Users.doc(req.params.id);
@@ -133,6 +141,7 @@ router.get("/user/:id", authenticate, async (req, res) => {
     res.send(response.data());
   } catch (error) {
     res.send({ msg: "" + error });
+    logger.error(error);
   }
 });
 
@@ -168,6 +177,7 @@ router.get("/user/:id", authenticate, async (req, res) => {
  *        description: Bad request
  */
 
+// Update user record
 router.patch("/user/:id", authenticate, async (req, res) => {
   try {
     const userRef = db.Users.doc(req.params.id);
@@ -183,8 +193,10 @@ router.patch("/user/:id", authenticate, async (req, res) => {
     await userRef.update(data);
 
     res.send({ msg: "User updated" });
+    logger.info("User updated");
   } catch (error) {
     res.send({ msg: "" + error });
+    logger.error(error);
   }
 });
 
@@ -210,15 +222,17 @@ router.patch("/user/:id", authenticate, async (req, res) => {
  *        description: User not found
  */
 
+// Delete a user record
 router.delete("/user/:id", authenticate, async (req, res) => {
   try {
     const userRef = db.Users.doc(req.params.id);
     await userRef.delete();
 
-    console.log("User deleted");
     res.send({ msg: "User deleted" });
+    logger.info("User deleted")
   } catch (error) {
     res.send({ msg: "" + error });
+    logger.error(error);
   }
 });
 

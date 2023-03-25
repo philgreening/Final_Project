@@ -20,7 +20,6 @@ const app = admin.initializeApp(firebaseConfig);
 // Initialize Firestore database and storage bucket
 const db = admin.firestore();
 const bucket = getStorage().bucket();
-// const storage = admin.storage();
 
 db.settings({ ignoreUndefinedProperties: true })
 

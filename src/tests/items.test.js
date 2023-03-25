@@ -5,6 +5,7 @@ const db = require("../config");
 const sharp = require("sharp");
 const fs = require("fs");
 
+// Mocks the fs dependancy
 jest.mock("fs", () => ({
   existsSync: jest.fn().mockReturnValue(true),
   readdirSync: jest.fn(),
@@ -12,15 +13,16 @@ jest.mock("fs", () => ({
   unlinkSync: jest.fn(),
 }));
 
+// Mocks the middleware file upload 
 jest.mock("../middleware/middlewareFile", () =>
-jest.fn().mockImplementation((req, res, next) => {
-  req.file = {
-    originalname: "test-image.jpg",
-    mimetype: "image/jpeg",
-    path: "/tmp/test.jpg",
-  };
-  next();
-})
+  jest.fn().mockImplementation((req, res, next) => {
+    req.file = {
+      originalname: "test-image.jpg",
+      mimetype: "image/jpeg",
+      path: "/tmp/test.jpg",
+    };
+    next();
+  })
 );
 
 describe("Item routes", () => {
@@ -37,8 +39,6 @@ describe("Item routes", () => {
   });
 
   describe("POST /items", () => {
-
-
     let sharpToSpy, bucketUploadMock;
 
     const mockFile = {
@@ -61,8 +61,6 @@ describe("Item routes", () => {
         },
       ]);
       db.bucket.upload = bucketUploadMock;
-
-
     });
 
     afterEach(() => {
@@ -128,32 +126,32 @@ describe("Item routes", () => {
           status: "available",
           formData: new FormData(),
         });
-    
+
       expect(response.statusCode).toBe(400);
       expect(response.body.msg).toBe("Item name and type are required");
     });
   });
-  describe('GET /api/v1/items', () => {
-  
-    it('should return all items', async () => {
+
+  describe("GET /api/v1/items", () => {
+    it("should return all items", async () => {
       const response = await request(app)
         .get(routeAll)
-        .set('Authorization', `Bearer ${authToken}`)
+        .set("Authorization", `Bearer ${authToken}`)
         .expect(200);
 
       expect(response.body.length).toBeGreaterThan(0);
-      expect(response.body[0]).toHaveProperty('item_name');
-      expect(response.body[0]).toHaveProperty('item_type');
-      expect(response.body[0]).toHaveProperty('description');
-      expect(response.body[0]).toHaveProperty('status');
-      expect(response.body[0]).toHaveProperty('imageUrl');
+      expect(response.body[0]).toHaveProperty("item_name");
+      expect(response.body[0]).toHaveProperty("item_type");
+      expect(response.body[0]).toHaveProperty("description");
+      expect(response.body[0]).toHaveProperty("status");
+      expect(response.body[0]).toHaveProperty("imageUrl");
     });
   });
 
   describe("GET /api/v1/items/item/", () => {
     it("should return a item with the specified ID", async () => {
       const itemId = "abc123"; // Example item ID
-  
+
       // Mock database call to return sample transaction document
       const response = {
         item_name: "Box",
@@ -162,59 +160,58 @@ describe("Item routes", () => {
         status: "Reserved",
         imageUrl: "https://example.com/image.jpg",
       };
-   
-          // Mock Firestore database instance and method
-          const mockDocRef = {
-            get: jest.fn().mockResolvedValue({
-              data: jest.fn().mockReturnValue(response)
-            })
-          };
-          db.Items.doc = jest.fn().mockReturnValue(mockDocRef);
-  
+
+      // Mock Firestore database instance and method
+      const mockDocRef = {
+        get: jest.fn().mockResolvedValue({
+          data: jest.fn().mockReturnValue(response),
+        }),
+      };
+      db.Items.doc = jest.fn().mockReturnValue(mockDocRef);
+
       // Make GET request to route handler function
       const res = await request(app)
         .get(routeSingle + itemId)
         .set("Authorization", `Bearer ${authToken}`);
 
-        // Assert that the response contains the expected transaction data
+      // Assert that the response contains the expected transaction data
       expect(res.statusCode).toBe(200);
       expect(res.body).toEqual(response);
       expect(db.Items.doc).toHaveBeenCalledWith(itemId);
     });
-  })
+  });
+
   describe("DELETE /api/v1/items/item/", () => {
     it("should delete a reservation document with the specified ID and return a success message", async () => {
       const itemId = "abc123"; // Example item ID
-  
+
       // Mock database call to delete sample reservation document
       const deleteMock = jest.fn().mockResolvedValue();
       db.Items.doc = jest.fn().mockReturnValue({ delete: deleteMock });
-  
+
       // Make DELETE request to route handler function
       const res = await request(app)
         .delete(routeSingle + itemId)
         .set("Authorization", `Bearer ${authToken}`);
-  
+
       // Assert that the response contains the success message
       expect(res.statusCode).toBe(200);
       expect(res.body).toEqual({ msg: "Item deleted" });
-  
+
       // Assert that the mock delete function was called with the correct item ID
       expect(db.Items.doc).toHaveBeenCalledWith(itemId);
       expect(deleteMock).toHaveBeenCalled();
     });
-  
+
     it("should return an error message when an unauthorized request is made", async () => {
       const itemId = "abc123"; // Example reservation ID
-  
+
       // Make DELETE request to route handler function without providing authentication token
       const res = await request(app).delete(routeSingle + itemId);
-  
+
       // Assert that the response contains the error message
       expect(res.statusCode).toBe(401);
       expect(res.body).toEqual({ msg: "Unauthorised" });
     });
   });
-
-
 });

@@ -1,8 +1,10 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
 
-const authenticate = require('../middleware/middlewareAuth');
-const db = require('../config');
+const authenticate = require("../middleware/middlewareAuth");
+const db = require("../config");
+
+const logger = require("../logger");
 
 ///////////////Reservation Routes///////////////
 
@@ -34,26 +36,28 @@ const db = require('../config');
  *        description: Bad request
  */
 
-router.post("/", authenticate, async(req,res)=>{
-    try{
-    
+// Create a reservation
+router.post("/", authenticate, async (req, res) => {
+  try {
     if (!req.body.item_id || !req.body.item_name || !req.body.user_id) {
-        return res.status(400).json({ msg: "Missing required fields" });
-        }
-    
+      return res.status(400).json({ msg: "Missing required fields" });
+    }
+
     const data = {
-        item_id: req.body.item_id,
-        item_name: req.body.item_name,
-        user_id: req.body.user_id,
-        res_date: db.CurrentTime
+      item_id: req.body.item_id,
+      item_name: req.body.item_name,
+      user_id: req.body.user_id,
+      res_date: db.CurrentTime,
     };
-    // console.log("Reservation data: ", data);
+
     await db.Reservations.add(data);
-    res.send({msg:"Reservation created"});
-}catch(error){
-    console.log(error)
-    res.send({msg: error});
-}
+
+    res.send({ msg: "Reservation created" });
+    logger.info("Reservation created");
+  } catch (error) {
+    res.send({ msg: error });
+    logger.error(error);
+  }
 });
 
 /**
@@ -78,26 +82,27 @@ router.post("/", authenticate, async(req,res)=>{
  *        description: Reservations not found
  */
 
-router.get("/", authenticate, async(req,res)=>{
-    try {
-        const response = await db.Reservations.get();
-        let resArray = [];
-        response.forEach(doc =>{
+// Get all reservations
+router.get("/", authenticate, async (req, res) => {
+  try {
+    const response = await db.Reservations.get();
+    let resArray = [];
 
-            const reservations = {
-                res_id: doc.id,
-                item_id: doc.data().item_id,
-                item_name: doc.data().item_name,
-                user_id: doc.data().user_id,
-                res_date: doc.data().res_date
-            }
-            resArray.push(reservations);
-        });
-        // console.log(resArray);
-        res.send(resArray); 
-    } catch (error) {
-        res.send({msg: "" + error })
-    }
+    response.forEach((doc) => {
+      const reservations = {
+        res_id: doc.id,
+        item_id: doc.data().item_id,
+        item_name: doc.data().item_name,
+        user_id: doc.data().user_id,
+        res_date: doc.data().res_date,
+      };
+      resArray.push(reservations);
+    });
+    res.send(resArray);
+  } catch (error) {
+    res.send({ msg: "" + error });
+    logger.error(error);
+  }
 });
 
 /**
@@ -126,16 +131,17 @@ router.get("/", authenticate, async(req,res)=>{
  *        description: User not found
  */
 
-router.get("/reservation/:id", authenticate, async(req,res)=>{
-    try {
-        const resRef = db.Reservations.doc(req.params.id);
-        const response = await resRef.get();
-    
-        // console.log(response.data());
-        res.send(response.data()); 
-    } catch (error) {
-        res.send({msg: "" + error })
-    }
+// Get a single reservation
+router.get("/reservation/:id", authenticate, async (req, res) => {
+  try {
+    const resRef = db.Reservations.doc(req.params.id);
+    const response = await resRef.get();
+
+    res.send(response.data());
+  } catch (error) {
+    res.send({ msg: "" + error });
+    logger.error(error);
+  }
 });
 
 /**
@@ -160,16 +166,18 @@ router.get("/reservation/:id", authenticate, async(req,res)=>{
  *        description: User not found
  */
 
-router.delete("/reservation/:id", authenticate, async(req,res)=>{
-    try {
-        const resRef = db.Reservations.doc(req.params.id);
-        await resRef.delete();
-    
-        // console.log("Reservation deleted");
-        res.send({msg: "Reservation deleted"}); 
-    } catch (error) {
-        res.send({msg: "" + error })
-    }
+// Delete a reservation
+router.delete("/reservation/:id", authenticate, async (req, res) => {
+  try {
+    const resRef = db.Reservations.doc(req.params.id);
+    await resRef.delete();
+
+    res.send({ msg: "Reservation deleted" });
+    logger.info("Reservation deleted");
+  } catch (error) {
+    res.send({ msg: "" + error });
+    logger.error(error);
+  }
 });
 
 module.exports = router;
