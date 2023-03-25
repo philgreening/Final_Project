@@ -114,7 +114,7 @@ export default {
         this.getUser();
     },
     methods: {
-        // Fetch user data from API
+        // Gets user data from server via the API
         async getUser() {
             await axios
                 .get("/api/v1/users/user/" + this.currentUserId, {
@@ -123,7 +123,6 @@ export default {
                     },
                 })
                 .then((response) => {
-                    console.log("res response: ", response.data);
                     this.user = response.data;
                 })
                 .catch((error) => {
@@ -142,7 +141,6 @@ export default {
                 if (!form.checkValidity()) {
                     event.preventDefault();
                     event.stopPropagation();
-                    console.log("called");
                 } else {
                     this.updateUser();
                     this.success = "Details updated";
@@ -155,7 +153,6 @@ export default {
             // Update user email in Firebase Auth
             updateEmail(auth.currentUser, this.user.email)
                 .then(() => {
-                    console.log("Auth email updated: ");
                 })
                 .catch((error) => {
                     console.log(error);
@@ -179,7 +176,6 @@ export default {
                     }
                 )
                 .then((response) => {
-                    console.log("res response upadte item: ", response.data);
                     this.getUser();
                 })
                 .catch((error) => {

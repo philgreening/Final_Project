@@ -3,7 +3,7 @@ const { app, server } = require("../index");
 const { getAuthToken } = require("./helpers/testHelpers");
 const db = require("../config");
 const sharp = require("sharp");
-const fs = require("fs");
+// const fs = require("fs");
 
 // Mocks the fs dependancy
 jest.mock("fs", () => ({
@@ -13,7 +13,7 @@ jest.mock("fs", () => ({
   unlinkSync: jest.fn(),
 }));
 
-// Mocks the middleware file upload 
+// Mocks the middleware file upload
 jest.mock("../middleware/middlewareFile", () =>
   jest.fn().mockImplementation((req, res, next) => {
     req.file = {
@@ -24,6 +24,47 @@ jest.mock("../middleware/middlewareFile", () =>
     next();
   })
 );
+
+// Mocks swagger specs object
+jest.mock("swagger-jsdoc", () =>
+  jest.fn(() => ({
+    definition: {
+      openapi: "3.0.0",
+      info: {
+        title: "Library of things API",
+        version: "1.0.0",
+        description: "An API for a library of things application",
+      },
+      servers: [
+        {
+          url: "http://127.0.0.1:8000",
+        },
+      ],
+      components: {
+        securitySchemes: {
+          bearerAuth: {
+            type: "http",
+            scheme: "bearer",
+            bearerFormat: "JWT",
+          },
+        },
+      },
+    },
+    apis: ["./routes/*.js", "./schemas/*.yaml"],
+  }))
+);
+
+jest.mock('pino', () => {
+  const mockPino = jest.fn(() => ({
+    info: jest.fn(),
+    error: jest.fn(),
+    // any other methods that you use
+  }));
+  mockPino.destination = jest.fn(() => ({
+    write: jest.fn(),
+  }));
+  return mockPino;
+});
 
 describe("Item routes", () => {
   const routeAll = "/api/v1/items";

@@ -262,7 +262,7 @@ export default {
             returnedItem: [],
             reservations: [],
             reservedItem: [],
-            date: Math.floor(Date.now()/ 1000),
+            date: Math.floor(Date.now() / 1000),
         };
     },
     mounted() {
@@ -271,14 +271,12 @@ export default {
     methods: {
         getIndex(user) {
             this.user = user;
-            console.log("called:", this.user);
         },
         getTransactionIndex(transaction) {
             this.returnedItem = transaction;
-            console.log("called:", this.returnedItem);
         },
+        // Gets all users from the server via the API
         async getAllUsers() {
-            console.log(" get all users: ", userStore.user);
             await axios
                 .get("/api/v1/users", {
                     headers: {
@@ -286,19 +284,15 @@ export default {
                     },
                 })
                 .then((response) => {
-                    console.log(response.data);
                     this.users = response.data;
                 })
                 .catch((error) => {
                     console.log(error);
                 });
         },
+        // Updates user admin status
         async updateAdmin(user) {
-            // reset alert messages
-            console.log("user: ", user);
-
             this.user = user;
-            console.log("this user: ", this.user);
 
             // Conditions for setting admin status
             if (this.user.admin === false) {
@@ -306,7 +300,6 @@ export default {
             } else {
                 this.user.admin = false;
             }
-            console.log("this user: ", this.user);
             const data = {
                 admin: this.user.admin,
             };
@@ -318,13 +311,13 @@ export default {
                     },
                 })
                 .then((response) => {
-                    console.log("res response upadte user: ", response.data);
                     this.getAllUsers();
                 })
                 .catch((error) => {
                     console.log(error);
                 });
         },
+        // Gets all transactions from the server via the API
         async getAllTransactions() {
             await axios
                 .get("/api/v1/transactions", {
@@ -333,13 +326,13 @@ export default {
                     },
                 })
                 .then((response) => {
-                    console.log("res response: ", response.data);
                     this.transactions = response.data;
                 })
                 .catch((error) => {
                     console.log(error);
                 });
         },
+        // Gets all reservations from the server via the API
         async getAllReservations() {
             await axios
                 .get("/api/v1/reservations", {
@@ -348,13 +341,13 @@ export default {
                     },
                 })
                 .then((response) => {
-                    console.log("res response: ", response.data);
                     this.reservations = response.data;
                 })
                 .catch((error) => {
                     console.log(error);
                 });
         },
+        // Formats date into a readable format
         formatDate(timestamp) {
             if (timestamp) {
                 let date = new Date(timestamp._seconds * 1000);
@@ -364,9 +357,8 @@ export default {
                 return "";
             }
         },
+        // Updates transaction status to returned
         async returnItem() {
-            console.log("returned: " + this.returnedItem.item_id);
-
             const data = {
                 transaction_status: "Returned",
             };
@@ -383,15 +375,14 @@ export default {
                     }
                 )
                 .then((response) => {
-                    console.log("res response: ", response.data);
                     this.updateItemStatus();
                 })
                 .catch((error) => {
                     console.log(error);
                 });
         },
+        // Updates item status to available
         async updateItemStatus() {
-            console.log(this.returnedItem.item_id);
             const data = {
                 status: "Available",
             };
@@ -407,7 +398,6 @@ export default {
                     }
                 )
                 .then((response) => {
-                    console.log("res response upadte item: ", response.data);
                     this.getAllTransactions();
                 })
                 .catch((error) => {
@@ -416,11 +406,9 @@ export default {
         },
         getResIndex(reservation) {
             this.reservedItem = reservation;
-            console.log(this.reservedItem);
         },
+        // Creates a transaction for a loan
         async loanItem() {
-            console.log("Loaned: " + this.reservedItem.item_id);
-
             const data = {
                 item_id: this.reservedItem.item_id,
                 item_name: this.reservedItem.item_name,
@@ -434,7 +422,6 @@ export default {
                     },
                 })
                 .then((response) => {
-                    console.log("res response: ", response.data);
                     this.updateReservedItemStatus();
                     this.deleteResevation();
                 })
@@ -442,12 +429,11 @@ export default {
                     console.log(error);
                 });
         },
+        // Updates item status to On Loan
         async updateReservedItemStatus() {
-            console.log(this.reservedItem.item_id);
             const data = {
                 status: "On Loan",
             };
-
             await axios
                 .patch(
                     "/api/v1/items/item/" + this.reservedItem.item_id,
@@ -459,12 +445,12 @@ export default {
                     }
                 )
                 .then((response) => {
-                    console.log("res response update item: ", response.data);
                 })
                 .catch((error) => {
                     console.log(error);
                 });
         },
+        // Deletes reservation
         async deleteResevation() {
             await axios
                 .delete(
@@ -477,7 +463,6 @@ export default {
                     }
                 )
                 .then((response) => {
-                    console.log("Reservation Deleted: ", response.data);
                     this.getAllReservations();
                 })
                 .catch((error) => {

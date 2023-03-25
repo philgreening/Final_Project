@@ -10,12 +10,19 @@
           </div>
         </div>
       </div>
+      <div class="row p-4 justify-content-center text-center">
+        <router-link to="/register" class="btn me-4 button col-5">
+          <h1>Sign Up </h1>
+        </router-link>
+        <router-link to="/login" class="btn me-4 button col-5">
+          <h1>Sign in </h1>
+        </router-link>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-
 import axios from 'axios';
 
 export default {
@@ -25,21 +32,22 @@ export default {
       items: []
     }
   },
-  mounted(){
+  mounted() {
     this.getAllItems();
   },
-  methods:{
+  methods: {
+    // Gets all items from server via API  
     async getAllItems() {
       await axios.get('/api/v1/items', {
       })
-      .then(response => {
-        this.items = response.data;
-        console.log(this.items);
-      })
-      .catch(error => {
-        console.log(error)
-      })
+        .then(response => {
+          this.items = response.data;
+        })
+        .catch(error => {
+          console.log(error)
+        })
     },
+    // Creates random array of items
     shuffleArray(array) {
       for (let i = array.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -49,9 +57,16 @@ export default {
     },
   },
   computed: {
+    // Returns 3 randon items to display
     randomItems() {
       return this.shuffleArray(this.items).slice(0, 3);
     }
   }
 }
 </script>
+
+<style>
+.button {
+  background-color: #539D8B;
+  color: #F5C5BE;
+}</style>

@@ -50,7 +50,6 @@ router.post("/", authenticate, (req, res) => {
     }
 
     // Check if required data is present
-    console.log(req.body);
     if (
       !req.body.item_name ||
       !req.body.item_type ||

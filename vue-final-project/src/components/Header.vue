@@ -1,13 +1,20 @@
 <template>
-  <nav class="navbar navbar-expand navbar-dark bg-dark p-4">
+  <nav class="navbar navbar-expand navbar-dark navbar-custom p-4">
     <div class="container-fluid">
       <!-- Display if user is NOT authenticated -->
       <template v-if="!isLoggedIn">
-        <router-link to="/" class="navbar-brand"><strong>LibraryOfThings</strong></router-link>
+
+        <router-link to="/" class="navbar-brand"><img src="../assets/Library of things-logos-cropped.jpeg"
+            class="img-fluid"></router-link>
+        <!-- <router-link to="/" class="navbar-brand"><strong>LibraryOfThings</strong></router-link> -->
+
       </template>
       <!-- Display if user is authenticated -->
       <template v-else>
-        <router-link to="/items" class="navbar-brand"><strong>LibraryOfThings</strong></router-link>
+        <!-- <router-link to="/items" class="navbar-brand"><strong>LibraryOfThings</strong></router-link> -->
+        <router-link to="/" class="navbar-brand"><img src="../assets/Library of things-logos-cropped.jpeg"
+            class="img-fluid"></router-link>
+
       </template>
       <!-- Hamburger button for mobile view -->
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
@@ -21,12 +28,12 @@
         <template v-if="isLoggedIn">
           <ul class="navbar-nav mr-auto">
             <li class="nav-item mx-2">
-              <router-link to="/items" class="nav-link">Home</router-link>
+              <router-link to="/items" class="nav-link navbar-text">Home</router-link>
             </li>
             <!-- Display dropdown if user is an admin -->
             <template v-if="isAdmin">
               <li class="nav-item dropdown mx-2">
-                <router-link to="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"
+                <router-link to="#" class="nav-link navbar-text dropdown-toggle" role="button" data-bs-toggle="dropdown"
                   aria-expanded="false">
                   Admin
                 </router-link>
@@ -51,7 +58,7 @@
             </template>
             <!-- User dropdown menu -->
             <li class="nav-item dropdown mx-2">
-              <router-link to="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"
+              <router-link to="#" class="nav-link navbar-text dropdown-toggle" role="button" data-bs-toggle="dropdown"
                 aria-expanded="false" v-model="username">
                 {{ username }}
               </router-link>
@@ -79,18 +86,19 @@
       <!-- Display if user is NOT authenticated -->
       <template v-if="!isLoggedIn">
         <div class="navbar-end">
-          <router-link to="/register" class="btn btn-light me-4"><strong>Register</strong></router-link>
-          <router-link to="/login" class="btn btn-light me-4"><strong>Log In</strong></router-link>
+          <!-- <router-link to="/register" class="btn btn-light me-4"><strong>Register</strong></router-link> -->
+          <router-link to="/login" class="btn me-4 navbar-button"><strong>Sign in </strong>
+            <font-awesome-icon icon="arrow-right-to-bracket" size="xl" />
+          </router-link>
         </div>
       </template>
       <template v-else>
         <div class="navbar-end">
           <!-- / <form @submit.prevent="logout"> -->
-          <button type="submit" class="btn btn-danger me-4" @click="handleSignOut" v-if="isLoggedIn">
-            Sign out
+          <button type="submit" class="btn me-4 navbar-button" @click="handleSignOut" v-if="isLoggedIn">
+            <strong>Sign out </strong>
+            <font-awesome-icon icon="arrow-right-to-bracket" size="xl" />
           </button>
-          <!-- <button type="submit" class="btn btn-danger me-4"><strong>Log Out</strong></button> -->
-          <!-- </form> -->
         </div>
       </template>
     </div>
@@ -98,11 +106,11 @@
 </template>
 
 <script setup>
+import { useUserStore } from "../stores/userStore";
 import { onMounted, ref } from "vue";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import router from "../router";
 import { auth } from "../main.js";
-import { useUserStore } from "../stores/userStore";
 
 const userStore = useUserStore();
 const isLoggedIn = ref(false);
@@ -115,13 +123,11 @@ onMounted(() => {
   onAuthStateChanged(auth, (user) => {
     if (user) {
       isLoggedIn.value = true;
-      // console.log("header dropdown: ", username)
 
       // Sets username on user account dropdown
       setTimeout(() => {
         username.value = userStore.user.name;
         isAdmin.value = userStore.user.admin;
-        //  console.log("username",username.value);
       }, 500);
     } else {
       isLoggedIn.value = false;
@@ -131,13 +137,22 @@ onMounted(() => {
 });
 
 const handleSignOut = () => {
-  //console.log("username",username);
   signOut(auth).then(() => {
-    console.log("logoutussername", username);
     userStore.$reset();
     localStorage.clear();
-    console.log("on logout:", userStore.user);
     router.push("/");
   });
 };
 </script>
+
+<style>
+.navbar-custom {
+  background-color: #539D8B;
+}
+.navbar-text {
+  color: #F5C5BE;
+}
+.navbar-button {
+  background-color: #F5C5BE;
+}
+</style>

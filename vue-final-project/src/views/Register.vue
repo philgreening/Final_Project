@@ -45,32 +45,19 @@
         <textarea class="form-control" placeholder="Address" v-model.lazy="address" required></textarea>
         <div class="invalid-feedback">Please input an address.</div>
       </div>
-      <!-- <div class="alert alert-success mb-3" role="alert" v-if="success.length">
-                                <p class="text-center">{{ success }}</p>
-                            </div> -->
-      <button type="submit" class="btn btn-primary col-4">Sign up</button>
+      <button type="submit" class="btn btn-primary col-5">Sign up
+        <font-awesome-icon icon="arrow-right-to-bracket" size="xl" />
+      </button>
     </form>
-    <!-- </div> -->
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
-import {
-  getAuth,
-  createUserWithEmailAndPassword,
-  GoogleAuthProvider,
-  signInWithPopup,
-} from "firebase/auth";
+import { ref } from "vue";
+import { createUserWithEmailAndPassword } from "firebase/auth";
 import { useRouter } from "vue-router";
-import axios, { Axios } from "axios";
+import axios from "axios";
 import { auth } from "../main";
-
-const provider = new GoogleAuthProvider();
-
-provider.setCustomParameters({
-  prompt: "select_account",
-});
 
 const router = useRouter();
 const email = ref("");
@@ -78,20 +65,6 @@ const password = ref("");
 const address = ref("");
 const firstName = ref("");
 const lastName = ref("");
-// const success = ref([]);
-
-//     onMounted(()=>{
-//   // Render the Google sign-in button
-//   gapi.signin2.render("google-sign-in", {
-//     scope: "email",
-//     width: 240,
-//     height: 50,
-//     longtitle: true,
-//     theme: "light",
-//     onsuccess: registerWithGoogle,
-//     onfailure: onError
-//   });
-// });
 
 // Handle form submission
 const submitForm = (event) => {
@@ -105,20 +78,17 @@ const submitForm = (event) => {
     if (!form.checkValidity()) {
       event.preventDefault();
       event.stopPropagation();
-      console.log("called");
     } else {
       register();
-      // this.success = "Details updated";
     }
     form.classList.add("was-validated");
   });
 };
 
+// Register user with Firebase authentication and save user data to database
 const register = () => {
   createUserWithEmailAndPassword(auth, email.value, password.value)
     .then((data) => {
-      console.log("Succesfully registered!");
-      console.log(data.user.uid);
       const uid = data.user.uid;
       const userEmail = data.user.email;
 
@@ -140,28 +110,5 @@ const register = () => {
     });
 };
 
-const registerWithGoogle = () => {
-  signInWithPopup(auth, provider)
-    .then((result) => {
-      // credentialFromResult(result);
-      const user = result.user;
-      console.log(user);
-      // myModal.show();
-      console.log("sign in result: ", result);
-      // router.push('/items');
-    })
-    .catch((error) => {
-      console.log(error);
-    });
-};
-
-const onError = () => {
-  alert("Error occurred while signing in with Google.");
-};
 </script>
 
-<style scoped>
-#google-sign-in {
-  margin: auto;
-}
-</style>

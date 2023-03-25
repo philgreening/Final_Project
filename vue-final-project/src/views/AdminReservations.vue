@@ -2,10 +2,10 @@
     <div class="container p-4 mt-3 shadow-lg">
         <h1 class="text-center"> Reservations</h1>
         <div class="mb-3">
-      <input type="text" class="form-control bg-light" v-model="search" placeholder="Search reservations...">
-    </div>
+            <input type="text" class="form-control bg-light" v-model="search" placeholder="Search reservations...">
+        </div>
         <table class="table p-4">
-            <thead >
+            <thead>
                 <tr>
                     <th scope="col">Item Name</th>
                     <th scope="col">User Name</th>
@@ -15,23 +15,21 @@
             </thead>
             <tbody>
                 <tr v-for="reservation in filteredReservations" :key="reservation.res_id">
-                    <td >{{ reservation.item_name }}</td>
+                    <td>{{ reservation.item_name }}</td>
                     <template v-for="user in users" :key="user.user_id">
                         <td v-if="user.user_id === reservation.user_id">{{ user.first_name + ` ` + user.last_name }}</td>
                     </template>
                     <td>{{ formatDate(reservation.res_date) }}</td>
                     <td class="text-center">
-                        <font-awesome-icon icon="fa-solid fa-check" size="xl"
-                        type="button" @click="getResIndex(reservation)" class="text-dark tick"
-                                data-bs-toggle="modal" data-bs-target="#confirmLoanModal"/>
+                        <font-awesome-icon icon="fa-solid fa-check" size="xl" type="button"
+                            @click="getResIndex(reservation)" class="text-dark tick" data-bs-toggle="modal"
+                            data-bs-target="#confirmLoanModal" />
                     </td>
-
                 </tr>
-
             </tbody>
         </table>
     </div>
-
+    <!-- Confirm Loan Modal -->
     <div class="modal fade" id="confirmLoanModal" tabindex="-1" aria-labelledby="confirmLoanModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -44,14 +42,12 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
-                    <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
                     <button type="button" class="btn btn-primary" @click="loanItem()" data-bs-dismiss="modal">Yes
                     </button>
                 </div>
             </div>
         </div>
     </div>
-
 </template>
 
 <script >
@@ -67,21 +63,23 @@ export default {
             reservations: [],
             reservedItem: [],
             users: [],
-            search:''
+            search: ''
         }
     },
     mounted() {
         this.getAllReservations();
         this.getAllUsers();
     },
-    computed:{
+    computed: {
+        // Filters reservations by search term
         filteredReservations() {
-        return this.reservations.filter(reservation => {
-          return reservation.item_name.toLowerCase().includes(this.search.toLowerCase());
-        });
-      },
+            return this.reservations.filter(reservation => {
+                return reservation.item_name.toLowerCase().includes(this.search.toLowerCase());
+            });
+        },
     },
     methods: {
+        // Gets all reservations from server via API
         async getAllReservations() {
             await axios.get('/api/v1/reservations', {
                 headers: {
@@ -89,13 +87,13 @@ export default {
                 }
             })
                 .then(response => {
-                    console.log("res response: ", response.data)
                     this.reservations = response.data;
                 })
                 .catch(error => {
                     console.log(error);
                 })
         },
+        // Gets all users from server via API
         async getAllUsers() {
             await axios.get('/api/v1/users', {
                 headers: {
@@ -103,13 +101,13 @@ export default {
                 }
             })
                 .then(response => {
-                    console.log("res response: ", response.data)
                     this.users = response.data;
                 })
                 .catch(error => {
                     console.log(error);
                 })
         },
+        // Converts date into readable format
         formatDate(timestamp) {
             if (timestamp) {
                 let date = new Date(timestamp._seconds * 1000)
@@ -121,25 +119,21 @@ export default {
         },
         getResIndex(reservation) {
             this.reservedItem = reservation;
-            console.log(this.reservedItem);
         },
+        // Creates a loan transaction 
         async loanItem() {
-            console.log("Loaned: " + this.reservedItem.item_id);
-
             const data = {
-
                 item_id: this.reservedItem.item_id,
                 item_name: this.reservedItem.item_name,
                 user_id: this.reservedItem.user_id,
                 transaction_status: 'On Loan',
             };
-            await axios.post('/api/v1/transactions',  data , {
+            await axios.post('/api/v1/transactions', data, {
                 headers: {
                     Authorization: `Bearer ${userStore.authToken}`
                 }
             })
                 .then(response => {
-                    console.log("res response: ", response.data);
                     this.updateReservedItemStatus();
                     this.deleteResevation();
                 })
@@ -147,27 +141,25 @@ export default {
                     console.log(error);
                 })
         },
+        //  Updates item status to on-loan 
         async updateReservedItemStatus() {
-            console.log(this.reservedItem.item_id);
             const data = {
                 status: 'On Loan'
             }
 
-            await axios.patch('/api/v1/items/item' + this.reservedItem.item_id, data, {
+            await axios.patch('/api/v1/items/item/' + this.reservedItem.item_id, data, {
                 headers: {
                     Authorization: `Bearer ${userStore.authToken}`
                 }
             })
                 .then(response => {
-                    console.log("res response update item: ", response.data);
-        
                     this.getAllReservations();
-                    this.$emit('update', 1);
                 })
                 .catch(error => {
                     console.log(error);
                 })
         },
+        //  Deletes a reservation
         async deleteResevation() {
             await axios.delete('/api/v1/reservations/reservation/' + this.reservedItem.res_id, {
                 headers: {
@@ -175,19 +167,18 @@ export default {
                 }
             })
                 .then(response => {
-                    console.log("Reservation Deleted: ", response.data);
                 })
                 .catch(error => {
                     console.log(error);
                 })
         },
     },
- 
+
 };
 </script>
 
 <style scoped>
-.tick:hover{
+.tick:hover {
     color: red !important;
 }
 </style>

@@ -11,8 +11,6 @@ const logger = require("../logger");
  * @swagger
  * '/api/v1/users':
  *  post:
- *     security:
- *      - bearerAuth: []
  *     tags:
  *     - Users
  *     summary: Create a user
@@ -36,7 +34,7 @@ const logger = require("../logger");
  */
 
 // Create User
-router.post("/", authenticate, async (req, res) => {
+router.post("/", async (req, res) => {
   try {
     const data = {
       first_name: req.body.first_name,
@@ -53,7 +51,6 @@ router.post("/", authenticate, async (req, res) => {
     res.send({ msg: "User Added" });
     logger.info("User added");
   } catch (error) {
-    console.log("" + error);
     res.send({ msg: "Missing" + error });
     logger.error(error);
   }

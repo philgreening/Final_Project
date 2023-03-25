@@ -2,8 +2,8 @@
     <div class="container p-4 mt-3 shadow-lg">
         <h1 class="text-center">My Reservations</h1>
         <div class="mb-3">
-      <input type="text" class="form-control bg-light" v-model="search" placeholder="Search reservations...">
-    </div>
+            <input type="text" class="form-control bg-light" v-model="search" placeholder="Search reservations...">
+        </div>
         <table class="table p-4">
             <thead>
                 <tr>
@@ -69,21 +69,23 @@ export default {
             reservedItem: [],
             users: [],
             currentUserId: userStore.user.id,
-            search:''
+            search: ''
         };
     },
     mounted() {
         this.getAllReservations();
         this.getAllUsers();
     },
-    computed:{
+    computed: {
+        // Search by item name
         filteredReservations() {
-        return this.reservations.filter(reservation => {
-          return reservation.item_name.toLowerCase().includes(this.search.toLowerCase());
-        });
-      },
+            return this.reservations.filter(reservation => {
+                return reservation.item_name.toLowerCase().includes(this.search.toLowerCase());
+            });
+        },
     },
     methods: {
+        // Gets all reservations from the server via the API
         async getAllReservations() {
             await axios
                 .get("api/v1/reservations", {
@@ -92,13 +94,13 @@ export default {
                     },
                 })
                 .then((response) => {
-                    console.log("res response: ", response.data);
                     this.reservations = response.data;
                 })
                 .catch((error) => {
                     console.log(error);
                 });
         },
+        // Gets all users from the server via the API
         async getAllUsers() {
             await axios
                 .get("/api/v1/users", {
@@ -107,13 +109,13 @@ export default {
                     },
                 })
                 .then((response) => {
-                    console.log("res response: ", response.data);
                     this.users = response.data;
                 })
                 .catch((error) => {
                     console.log(error);
                 });
         },
+        // Formats the timestamp into a readble format
         formatDate(timestamp) {
             if (timestamp) {
                 let date = new Date(timestamp._seconds * 1000);
@@ -125,13 +127,12 @@ export default {
         },
         getResIndex(reservation) {
             this.reservedItem = reservation;
-            console.log(this.reservedItem);
         },
-
+        // Deletes a reservation from the server via the API
         async deleteResevation() {
             await axios
                 .delete(
-                    "http://localhost:8000/delete-reservation/" +
+                    "/api/v1/reservations/reservation/" +
                     this.reservedItem.res_id,
                     {
                         headers: {
@@ -140,22 +141,21 @@ export default {
                     }
                 )
                 .then((response) => {
-                    console.log("Reservation Deleted: ", response.data);
                     this.updateItemStatus();
                 })
                 .catch((error) => {
                     console.log(error);
                 });
         },
+        // Updates the item status to Available
         async updateItemStatus() {
-            console.log(this.reservedItem.item_id);
             const data = {
                 status: "Available",
             };
 
             await axios
                 .patch(
-                    "/api/v1/users/user/" + this.reservedItem.item_id,
+                    "/api/v1/items/item/" + this.reservedItem.item_id,
                     data,
                     {
                         headers: {
@@ -164,7 +164,6 @@ export default {
                     }
                 )
                 .then((response) => {
-                    console.log("res response update item: ", response.data);
                     this.getAllReservations();
                 })
                 .catch((error) => {

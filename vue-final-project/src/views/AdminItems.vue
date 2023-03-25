@@ -1,31 +1,34 @@
 <template>
     <div class="container p-4 mt-3 shadow-lg">
         <h1 class="text-center">Items</h1>
+        <!-- Search bar -->
         <div class="mb-3">
-      <input type="text" class="form-control bg-light" v-model="search" placeholder="Search items...">
-    </div>
-    <div class="row">
-    <div class="col-md-4 mb-3">
-        <label for="status-filter" class="form-label">Filter by status</label>
-        <select id="ststus-filter" class="form-select bg-light" v-model="statusFilter">
-          <option value="">All</option>
-          <option v-for="status in statusList" :value="status">
-            {{ status }}
-          </option>
-        </select>
-      </div>
-      <div class="col-md-4">
-        <label for="type-filter" class="form-label">Filter by item type</label>
-        <select id="type-filter" class="form-select bg-light" v-model="itemTypeFilter">
-          <option value="">All</option>
-          <option v-for="item_type in itemTypeList" :value="item_type">
-            {{ item_type }}
-          </option>
-        </select>
-      </div>
-      </div>
-        <font-awesome-icon icon="fa-solid fa-circle-plus" size="2xl" type="button" class="text-success my-4" data-bs-toggle="modal"
-            data-bs-target="#addItemModal" title="Add an item" />
+            <input type="text" class="form-control bg-light" v-model="search" placeholder="Search items...">
+        </div>
+        <div class="row">
+            <!-- Status filter -->
+            <div class="col-md-4 mb-3">
+                <label for="status-filter" class="form-label">Filter by status</label>
+                <select id="status-filter" class="form-select bg-light" v-model="statusFilter">
+                    <option value="">All</option>
+                    <option v-for="status in statusList" :value="status">
+                        {{ status }}
+                    </option>
+                </select>
+            </div>
+            <!-- Item type filter -->
+            <div class="col-md-4">
+                <label for="type-filter" class="form-label">Filter by item type</label>
+                <select id="type-filter" class="form-select bg-light" v-model="itemTypeFilter">
+                    <option value="">All</option>
+                    <option v-for="item_type in itemTypeList" :value="item_type">
+                        {{ item_type }}
+                    </option>
+                </select>
+            </div>
+        </div>
+        <font-awesome-icon icon="fa-solid fa-circle-plus" size="2xl" type="button" class="text-success my-4"
+            data-bs-toggle="modal" data-bs-target="#addItemModal" title="Add an item" />
         <table class="table p-4">
             <thead>
                 <tr>
@@ -33,7 +36,7 @@
                     <th scope="col">Item Type</th>
                     <th scope="col">Description</th>
                     <th class="text-center" scope="col">Status</th>
-                    <th  class="text-center" scope="col">Edit item</th>
+                    <th class="text-center" scope="col">Edit item</th>
                     <th class="text-center" scope="col">Delete item</th>
                 </tr>
             </thead>
@@ -50,14 +53,14 @@
                     <td v-else class="text-center">{{ item.status }}</td>
                     <td class="text-center">
                         <font-awesome-icon icon="fa-regular fa-pen-to-square" size="xl" @click="getIndex(item)"
-                        type="button" class="text-dark edit" data-bs-toggle="modal" data-bs-target="#editItemModal" />
+                            type="button" class="text-dark edit" data-bs-toggle="modal" data-bs-target="#editItemModal" />
                     </td>
                     <td class="text-center">
                         <font-awesome-icon icon="fa-regular fa-trash-can" size="xl" v-if="item.status === 'Available'"
-                        type="button" @click="getIndex(item)" class="text-dark delete" data-bs-toggle="modal"
+                            type="button" @click="getIndex(item)" class="text-dark delete" data-bs-toggle="modal"
                             data-bs-target="#deleteItemModal" />
-                        <font-awesome-icon v-else icon="fa-solid fa-triangle-exclamation" type="button" class="text-warning" size="xl"
-                            :title="'Item ' + item.status + ' Cannot Delete'" />
+                        <font-awesome-icon v-else icon="fa-solid fa-triangle-exclamation" type="button" class="text-warning"
+                            size="xl" :title="'Item ' + item.status + ' Cannot Delete'" />
                     </td>
                 </tr>
             </tbody>
@@ -99,7 +102,7 @@
                                     v-model.lazy="editItem.item_type" required>
                                     <option selected></option>
                                     <option v-for="item_type in itemTypeList" :value="item_type">
-                                    {{ item_type }}
+                                        {{ item_type }}
                                     </option>
                                 </select>
                                 <div class="invalid-feedback">Please choose an item type.</div>
@@ -190,7 +193,6 @@
                                 <input type="file" class="form-control" @change="onFileSelected" required />
                                 <div class="invalid-feedback">Please choose a photo.</div>
                             </div>
-
                             <!-- display success message -->
                             <div class="alert alert-success mb-3" role="alert" v-if="success.length">
                                 <p class="text-center">{{ success }}</p>
@@ -250,35 +252,36 @@ export default {
             },
             success: "",
             selectedFile: null,
-            search:'',
+            search: '',
             statusFilter: "",
-            itemTypeFilter:'',
-            statusList: ["Available","On Loan", "Reserved"],
-            itemTypeList: ["DIY", "Board Game", "Technology", "Cleaning", "Cooking", "Gardening", "Furniture" ]
+            itemTypeFilter: '',
+            statusList: ["Available", "On Loan", "Reserved"],
+            itemTypeList: ["DIY", "Board Game", "Technology", "Cleaning", "Cooking", "Gardening", "Furniture"]
         };
     },
     mounted() {
         this.getAllItems();
     },
-    computed:{
+    computed: {
+        // Filters items by name, status and type
         filteredItems() {
-      return this.items.filter((items) => {
-        if (this.search && items.item_name.toLowerCase().indexOf(this.search.toLowerCase()) === -1) {
-          return false;
+            return this.items.filter((items) => {
+                if (this.search && items.item_name.toLowerCase().indexOf(this.search.toLowerCase()) === -1) {
+                    return false;
+                }
+                if (this.statusFilter && items.status !== this.statusFilter) {
+                    return false;
+                }
+                if (this.itemTypeFilter && items.item_type !== this.itemTypeFilter) {
+                    return false;
+                }
+                return true;
+            });
         }
-        if (this.statusFilter && items.status !== this.statusFilter) {
-          return false;
-        }
-        if (this.itemTypeFilter && items.item_type !== this.itemTypeFilter) {
-          return false;
-        }
-        return true;
-      });
-    }
     },
     methods: {
+        // Retrieve all items from server via the API
         async getAllItems() {
-            console.log("token get all: ", userStore.authToken);
             await axios
                 .get("/api/v1/items", {
                     headers: {
@@ -286,13 +289,13 @@ export default {
                     },
                 })
                 .then((response) => {
-                    console.log(response.data);
                     this.items = response.data;
                 })
                 .catch((error) => {
                     console.log(error);
                 });
         },
+        // Updates an existing item
         async updateItem() {
             this.success = "";
 
@@ -316,14 +319,13 @@ export default {
                     }
                 )
                 .then((response) => {
-                    console.log("res response upadte item: ", response.data);
                     this.success = "Item updated";
                 })
                 .catch((error) => {
                     console.log(error);
                 });
-            // }
         },
+        // Adds a new item
         async addItem() {
             let formData = new FormData();
             formData.append("item_name", this.createItem.item_name);
@@ -341,14 +343,13 @@ export default {
                     },
                 })
                 .then((response) => {
-                    console.log("Item created: ", response.data);
                     this.success = "Item added";
                 })
                 .catch((error) => {
                     console.log(error);
                 });
-            // }
         },
+        //Deletes an item
         async deleteItem() {
             await axios
                 .delete("/api/v1/items/item/" + this.editItem.item_id, {
@@ -357,16 +358,15 @@ export default {
                     },
                 })
                 .then((response) => {
-                    console.log("res response: ", response.data);
                     this.getAllItems();
                 })
                 .catch((error) => {
                     console.log(error);
                 });
         },
+
         getIndex(item) {
             this.editItem = item;
-            console.log(this.editItem);
         },
         clearAlerts() {
             this.success = "";
@@ -379,20 +379,20 @@ export default {
         onFileSelected(event) {
             this.selectedFile = event.target.files[0];
         },
-
+        // Checks for validation and submits form
         submitForm(event) {
             "use strict";
             event.preventDefault();
             event.stopPropagation();
 
             const formType = event.target.getAttribute("data-form-type");
-
+            // Checks validation rules are met
             const form = event.target;
             if (!form.checkValidity()) {
                 form.classList.add("was-validated");
                 return;
             }
-
+            // Checks if the form is adding a new record or updating a current record
             if (formType === "add") {
                 this.addItem();
             } else if (formType === "update") {
@@ -406,11 +406,12 @@ export default {
 </script>
 
 <style scoped>
-    .delete:hover{
-        color: red !important;
-        ;
-    }
-    .edit:hover{
-        color: blue !important;
-    }
+.delete:hover {
+    color: red !important;
+    ;
+}
+
+.edit:hover {
+    color: blue !important;
+}
 </style>

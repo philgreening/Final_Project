@@ -49,13 +49,10 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 /* import specific icons */
 import { faTrashCan, faPenToSquare} from '@fortawesome/free-regular-svg-icons'
-import { faTriangleExclamation, faCirclePlus, faCheck } from '@fortawesome/free-solid-svg-icons'
-
+import { faTriangleExclamation, faCirclePlus, faCheck, faArrowRightToBracket } from '@fortawesome/free-solid-svg-icons'
 
 /* add icons to the library */
-library.add(faTrashCan, faTriangleExclamation, faPenToSquare, faCirclePlus, faCheck)
-
-
+library.add(faTrashCan, faTriangleExclamation, faPenToSquare, faCirclePlus, faCheck, faArrowRightToBracket)
 
 createApp(App).use(pinia).use(router).use(VueAxios, axios).component('font-awesome-icon', FontAwesomeIcon).mount('#app')
 export { auth, storage, app, firebaseui }
