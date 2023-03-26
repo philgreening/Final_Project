@@ -1,16 +1,17 @@
 const admin = require('firebase-admin');
 const credentials = require('./key.json');
 const { getStorage } = require('firebase-admin/storage');
+require('dotenv').config();
 
-// Firebase configuration
+//Firebase configuration
 const firebaseConfig = {
-  apiKey: 'AIzaSyCDqf1KgJPE8CkHzL3quKcILcRo6Xo_8XM',
-  authDomain: 'final-project-afe71.firebaseapp.com',
-  projectId: 'final-project-afe71',
-  storageBucket: 'final-project-afe71.appspot.com',
-  messagingSenderId: '7143544341',
-  appId: '1:7143544341:web:59d9d4eb128c77e3a0a01c',
-  measurementId: 'G-SSXQSXDBT6',
+  apiKey: process.env.LOT_API_FIREBASE_API_KEY,
+  authDomain: process.env.LOT_API_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.LOT_API_FIREBASE__PROJECT_ID,
+  storageBucket: process.env.LOT_API_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.LOT_API_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.LOT_API_FIREBASE_APP_ID,
+  measurementId: process.env.LOT_API_FIREBASE_MEASUREMENT_ID,
   credential: admin.credential.cert(credentials),
 };
 
