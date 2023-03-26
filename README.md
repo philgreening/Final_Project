@@ -1,7 +1,6 @@
-# CM3070 Final Project
-## Library of things web application
+# CM3070 Final Project - Library of things web application
 
-# To run node/express API server
+## To run node/express API server
 
 /src
 
@@ -15,7 +14,7 @@ npm start
 
 npm test
 
-# To run Vue.js server
+## To run Vue.js server
 
 /vue-final-project
 
