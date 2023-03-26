@@ -64,7 +64,6 @@ onMounted(() => {
           // If the user is not new, redirect to the items page
           router.push("/items");
         }
-
         return true;
       },
        // Callback function when the FirebaseUI widget is rendered

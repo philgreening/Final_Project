@@ -7,26 +7,26 @@ import VueAxios from 'vue-axios'
 import App from './App.vue'
 import router from './router'
 
-// import './assets/main.css'
 import "bootstrap/dist/js/bootstrap.js"
 
 import * as firebaseui from 'firebaseui'
 import 'firebaseui/dist/firebaseui.css'
 
-
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getStorage } from "firebase/storage";
 
+//Firebase configuration
 const firebaseConfig = {
-    apiKey: "AIzaSyCDqf1KgJPE8CkHzL3quKcILcRo6Xo_8XM",
-    authDomain: "final-project-afe71.firebaseapp.com",
-    projectId: "final-project-afe71",
-    storageBucket: "final-project-afe71.appspot.com",
-    messagingSenderId: "7143544341",
-    appId: "1:7143544341:web:59d9d4eb128c77e3a0a01c",
-    measurementId: "G-SSXQSXDBT6"
-};
+    apiKey: import.meta.env.VITE_APP_API_KEY,
+    authDomain: import.meta.env.VITE_APP_AUTH_DOMAIN,
+    projectId: import.meta.env.VITE_APP_PROJECT_ID,
+    storageBucket: import.meta.env.VITE_APP_STORAGE_BUCKET,
+    messagingSenderId: import.meta.env.VITE_APP_MESSAGING_SENDER_ID,
+    appId: import.meta.env.VITE_APP_APP_ID,
+    measurementId: import.meta.env.VITE_APP_MEASUREMENT_ID,
+  };
+
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);

@@ -165,16 +165,12 @@
                                 <div class="input-group-prepend">
                                     <span class="input-group-text">Item Type</span>
                                 </div>
-
                                 <select class="form-select" aria-label="Default select example"
-                                    v-model="createItem.item_type" required>
+                                    v-model.lazy="createItem.item_type" required>
                                     <option selected></option>
-                                    <option value="DIY">DIY</option>
-                                    <option value="Board Game">Board Game</option>
-                                    <option value="Technology">Technology</option>
-                                    <option value="Cleaning">Cleaning</option>
-                                    <option value="Cooking">Cooking</option>
-                                    <option value="Gardening">Gardening</option>
+                                    <option v-for="item_type in itemTypeList" :value="item_type">
+                                        {{ item_type }}
+                                    </option>
                                 </select>
                                 <div class="invalid-feedback">Please choose an item type.</div>
                             </div>
