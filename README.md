@@ -1,4 +1,4 @@
-# CM3070 Final Project - Library of things web application
+# CM3070 Final Project - Library of Things Web Application
 
 ## To run node/express API server
 
